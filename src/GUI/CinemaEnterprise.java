@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class CinemaEnterprise extends Application {
+    //change
     private GregorianCalendar sat1 = new GregorianCalendar(2020, Calendar.JULY, 4);
     private GregorianCalendar sat2 = new GregorianCalendar(2020, Calendar.JULY, 11);
     private GregorianCalendar sat3 = new GregorianCalendar(2020, Calendar.JULY, 18);
