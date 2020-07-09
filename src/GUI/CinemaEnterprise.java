@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -17,13 +19,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class CinemaEnterprise extends Application {
-    //change
     private GregorianCalendar sat1 = new GregorianCalendar(2020, Calendar.JULY, 4);
     private GregorianCalendar sat2 = new GregorianCalendar(2020, Calendar.JULY, 11);
     private GregorianCalendar sat3 = new GregorianCalendar(2020, Calendar.JULY, 18);
     private GregorianCalendar sat4 = new GregorianCalendar(2020, Calendar.JULY, 25);
 
-    private Film theDarkNightFilm1, inceptionFilm2, endgameFilm3, titanicFilm4, avengersFilm5, avatarFilm6,
+    private Film theDarkKnightFilm1, inceptionFilm2, endgameFilm3, titanicFilm4, avengersFilm5, avatarFilm6,
             getOutFilm7, blackPantherFilm8, callMeByYourNameFilm9, interstellarFilm10;
     private LectureTheater lt1, lt2, lt3, lt4, lt5, lt6, lt7, lt8, lt9, lt10;
     private Show week1Show;
@@ -51,7 +52,7 @@ public class CinemaEnterprise extends Application {
         ScrollPane middleScrollPane = new ScrollPane(showFilms(week1Show));
 
         VBox mainGUI = new VBox(topHBox, middleScrollPane);
-        Scene scene = new Scene(mainGUI, 400, 300);
+        Scene scene = new Scene(mainGUI, 500, 450);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -59,16 +60,36 @@ public class CinemaEnterprise extends Application {
 
     private void setShow(){
         //Initialize the films
-        theDarkNightFilm1 = new Film("The Dark Night", "2008",5.80);
+        theDarkKnightFilm1 = new Film("The Dark Knight", "2008",5.80);
+        theDarkKnightFilm1.setPoster(new Image("file:TheDarkKnight.jpg"));
+
+
         inceptionFilm2 = new Film("Inception", "2010", 6.00);
+        inceptionFilm2.setPoster(new Image("file:Inception.jpg"));
+
         endgameFilm3 = new Film("Avengers: End Game", "2019", 7.50);
+        endgameFilm3.setPoster(new Image("file:Endgame.jpg"));
+
         titanicFilm4 = new Film("Titanic", "1997", 4.50);
+        titanicFilm4.setPoster(new Image("file:titanic.jpg"));
+
         avengersFilm5 = new Film("The Avengers", "2012", 4.50);
+        avengersFilm5.setPoster(new Image("file:Avengers.jpg"));
+
         avatarFilm6 = new Film("Avatar", "2009", 5.00);
+        avatarFilm6.setPoster(new Image("file:Avatar.jpg"));
+
         getOutFilm7 = new Film("Get Out", "2017", 6.00);
+        getOutFilm7.setPoster(new Image("file:GetOut.png"));
+
         blackPantherFilm8 = new Film("Black Panther", "2018", 6.00);
+        blackPantherFilm8.setPoster(new Image("file:BlackPanther.jpg"));
+
         callMeByYourNameFilm9 = new Film("Call Me By Your Name", "2017", 4.50);
+        callMeByYourNameFilm9.setPoster(new Image("file:CallMeByYourName.jpg"));
+
         interstellarFilm10 = new Film("Interstellar", "2014", 3.50);
+        interstellarFilm10.setPoster(new Image("file:Interstellar.jpg"));
 
         //Initialize the lecture halls
         lt1 = new LectureTheater("LT1", 200);
@@ -89,7 +110,7 @@ public class CinemaEnterprise extends Application {
         week1Show.addLectureTheaters(lt1, lt2, lt3, lt4, lt5, lt6, lt7, lt8, lt9, lt10);
 
         //Set films in the lecture theater
-        week1Show.addFilms(theDarkNightFilm1, inceptionFilm2, endgameFilm3, titanicFilm4, avengersFilm5, avatarFilm6,
+        week1Show.addFilms(theDarkKnightFilm1, inceptionFilm2, endgameFilm3, titanicFilm4, avengersFilm5, avatarFilm6,
                 getOutFilm7, blackPantherFilm8, callMeByYourNameFilm9, interstellarFilm10);
     }
 
@@ -98,7 +119,10 @@ public class CinemaEnterprise extends Application {
 
         for(int i=0; i<Show.SHOWS_PER_WEEK; i++) {
             Film f = filmsToDisplay.get(i);
-            filmVBoxes.add(new VBox(new Label(f.getFilmName()), new Label(f.getFilmReleaseYear()), new Label("" + f.getPrice())));
+            ImageView imageView = new ImageView(f.getPoster());
+            imageView.setPreserveRatio(true);
+            imageView.setFitHeight(200);
+            filmVBoxes.add(new VBox(imageView, new Label(f.getFilmName()), new Label(f.getFilmReleaseYear()), new Label("" + f.getPrice())));
             filmVBoxes.get(i).setAlignment(Pos.CENTER);
             filmVBoxes.get(i).setSpacing(5);
         }
