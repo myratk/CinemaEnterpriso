@@ -29,4 +29,8 @@ public class LectureTheater {
     public void setFilmInTheater(GregorianCalendar date, Film film) {
         filmsShowing.put(date, film);
     }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -58,4 +58,8 @@ public class Show {
 
         return films;
     }
+
+    public ArrayList<LectureTheater> getLectureTheaters() {
+        return lectureTheaters;
+    }
 }

@@ -5,18 +5,21 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class CinemaEnterprise extends Application {
     private GregorianCalendar sat1 = new GregorianCalendar(2020, Calendar.JULY, 4);
@@ -51,8 +54,13 @@ public class CinemaEnterprise extends Application {
 
         ScrollPane middleScrollPane = new ScrollPane(showFilms(week1Show));
 
-        VBox mainGUI = new VBox(topHBox, middleScrollPane);
-        Scene scene = new Scene(mainGUI, 500, 450);
+        Button checkoutButton = new Button("Check Out");
+        HBox bottomHBox = new HBox(checkoutButton);
+        bottomHBox.setAlignment(Pos.CENTER);
+        bottomHBox.setPadding(new Insets(10));
+
+        VBox mainGUI = new VBox(topHBox, middleScrollPane, bottomHBox);
+        Scene scene = new Scene(mainGUI, 730, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -116,15 +124,30 @@ public class CinemaEnterprise extends Application {
 
     private VBox showFilms(Show show) {
         ArrayList<Film> filmsToDisplay = show.getAllFilms();
+        ArrayList<LectureTheater> lectureTheaters = show.getLectureTheaters();
+        NumberFormat gb = NumberFormat.getCurrencyInstance(Locale.UK);
 
         for(int i=0; i<Show.SHOWS_PER_WEEK; i++) {
+            VBox filmVBox;
+            Border outlineBorder = new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, null, null));
+            Border noOutlineBorder = new Border(new BorderStroke(null, null, null, null));
             Film f = filmsToDisplay.get(i);
+            LectureTheater lt = lectureTheaters.get(i);
+
             ImageView imageView = new ImageView(f.getPoster());
-            imageView.setPreserveRatio(true);
-            imageView.setFitHeight(200);
-            filmVBoxes.add(new VBox(imageView, new Label(f.getFilmName()), new Label(f.getFilmReleaseYear()), new Label("" + f.getPrice())));
-            filmVBoxes.get(i).setAlignment(Pos.CENTER);
-            filmVBoxes.get(i).setSpacing(5);
+            imageView.setFitWidth(200);
+            imageView.setFitHeight(300);
+
+            filmVBox = new VBox(imageView, new Label(f.getFilmName() + ", " + f.getFilmReleaseYear()), new Label(lt.getName()),
+                    new Label("" + gb.format(f.getPrice())));
+            filmVBox.setAlignment(Pos.CENTER);
+            filmVBox.setSpacing(5);
+            filmVBox.setPadding(new Insets(10, 10, 10, 10));
+            filmVBox.setOnMouseEntered(mouseEvent -> filmVBox.setBorder(outlineBorder) );
+            filmVBox.setOnMouseExited(mouseEvent -> filmVBox.setBorder(noOutlineBorder) );
+            filmVBox.setOnMouseClicked(mouseEvent -> filmSelected(f));
+
+            filmVBoxes.add(filmVBox);
         }
 
         HBox middleHBox1 = new HBox(filmVBoxes.get(0), filmVBoxes.get(1), filmVBoxes.get(2));
@@ -149,5 +172,9 @@ public class CinemaEnterprise extends Application {
         VBox middleVBox = new VBox(middleHBox1, middleHBox2, middleHBox3, middleHBox4);
         middleVBox.setAlignment(Pos.CENTER);
         return middleVBox;
+    }
+
+    private void filmSelected(Film film) {
+        System.out.println(film.getFilmName());
     }
 }
