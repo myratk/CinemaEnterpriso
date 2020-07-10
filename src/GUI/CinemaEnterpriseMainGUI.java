@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.text.NumberFormat;
@@ -21,7 +22,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class CinemaEnterprise extends Application {
+public class CinemaEnterpriseMainGUI extends Application {
     private GregorianCalendar sat1 = new GregorianCalendar(2020, Calendar.JULY, 4);
     private GregorianCalendar sat2 = new GregorianCalendar(2020, Calendar.JULY, 11);
     private GregorianCalendar sat3 = new GregorianCalendar(2020, Calendar.JULY, 18);
@@ -34,6 +35,8 @@ public class CinemaEnterprise extends Application {
 
     ComboBox<String> dateSelectionCombo;
     ArrayList<VBox> filmVBoxes = new ArrayList<>();;
+
+    Stage mainStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -63,40 +66,39 @@ public class CinemaEnterprise extends Application {
         Scene scene = new Scene(mainGUI, 730, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
-
+        mainStage = primaryStage;
     }
 
     private void setShow(){
         //Initialize the films
-        theDarkKnightFilm1 = new Film("The Dark Knight", "2008",5.80);
+        theDarkKnightFilm1 = new Film("The Dark Knight", "2008",5.80, "12");
         theDarkKnightFilm1.setPoster(new Image("file:TheDarkKnight.jpg"));
 
-
-        inceptionFilm2 = new Film("Inception", "2010", 6.00);
+        inceptionFilm2 = new Film("Inception", "2010", 6.00, "12");
         inceptionFilm2.setPoster(new Image("file:Inception.jpg"));
 
-        endgameFilm3 = new Film("Avengers: End Game", "2019", 7.50);
+        endgameFilm3 = new Film("Avengers: End Game", "2019", 7.50, "12");
         endgameFilm3.setPoster(new Image("file:Endgame.jpg"));
 
-        titanicFilm4 = new Film("Titanic", "1997", 4.50);
+        titanicFilm4 = new Film("Titanic", "1997", 4.50, "12");
         titanicFilm4.setPoster(new Image("file:titanic.jpg"));
 
-        avengersFilm5 = new Film("The Avengers", "2012", 4.50);
+        avengersFilm5 = new Film("The Avengers", "2012", 4.50, "12A");
         avengersFilm5.setPoster(new Image("file:Avengers.jpg"));
 
-        avatarFilm6 = new Film("Avatar", "2009", 5.00);
+        avatarFilm6 = new Film("Avatar", "2009", 5.00, "12A");
         avatarFilm6.setPoster(new Image("file:Avatar.jpg"));
 
-        getOutFilm7 = new Film("Get Out", "2017", 6.00);
+        getOutFilm7 = new Film("Get Out", "2017", 6.00, "15");
         getOutFilm7.setPoster(new Image("file:GetOut.png"));
 
-        blackPantherFilm8 = new Film("Black Panther", "2018", 6.00);
+        blackPantherFilm8 = new Film("Black Panther", "2018", 6.00, "!2A");
         blackPantherFilm8.setPoster(new Image("file:BlackPanther.jpg"));
 
-        callMeByYourNameFilm9 = new Film("Call Me By Your Name", "2017", 4.50);
+        callMeByYourNameFilm9 = new Film("Call Me By Your Name", "2017", 4.50, "15");
         callMeByYourNameFilm9.setPoster(new Image("file:CallMeByYourName.jpg"));
 
-        interstellarFilm10 = new Film("Interstellar", "2014", 3.50);
+        interstellarFilm10 = new Film("Interstellar", "2014", 3.50, "12");
         interstellarFilm10.setPoster(new Image("file:Interstellar.jpg"));
 
         //Initialize the lecture halls
@@ -131,21 +133,21 @@ public class CinemaEnterprise extends Application {
             VBox filmVBox;
             Border outlineBorder = new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, null, null));
             Border noOutlineBorder = new Border(new BorderStroke(null, null, null, null));
-            Film f = filmsToDisplay.get(i);
+            Film film = filmsToDisplay.get(i);
             LectureTheater lt = lectureTheaters.get(i);
 
-            ImageView imageView = new ImageView(f.getPoster());
+            ImageView imageView = new ImageView(film.getPoster());
             imageView.setFitWidth(200);
             imageView.setFitHeight(300);
 
-            filmVBox = new VBox(imageView, new Label(f.getFilmName() + ", " + f.getFilmReleaseYear()), new Label(lt.getName()),
-                    new Label("" + gb.format(f.getPrice())));
+            filmVBox = new VBox(imageView, new Label(film.getFilmName() + ", " + film.getFilmReleaseYear()), new Label(lt.getName()),
+                    new Label("" + gb.format(film.getPrice())));
             filmVBox.setAlignment(Pos.CENTER);
             filmVBox.setSpacing(5);
             filmVBox.setPadding(new Insets(10, 10, 10, 10));
             filmVBox.setOnMouseEntered(mouseEvent -> filmVBox.setBorder(outlineBorder) );
             filmVBox.setOnMouseExited(mouseEvent -> filmVBox.setBorder(noOutlineBorder) );
-            filmVBox.setOnMouseClicked(mouseEvent -> filmSelected(f));
+            filmVBox.setOnMouseClicked(mouseEvent -> filmSelected(film));
 
             filmVBoxes.add(filmVBox);
         }
@@ -175,6 +177,9 @@ public class CinemaEnterprise extends Application {
     }
 
     private void filmSelected(Film film) {
-        System.out.println(film.getFilmName());
+        FilmDialog filmDialog = new FilmDialog(film);
+        filmDialog.initModality(Modality.APPLICATION_MODAL);
+        filmDialog.initOwner(mainStage);
+        filmDialog.showAndWait();
     }
 }
