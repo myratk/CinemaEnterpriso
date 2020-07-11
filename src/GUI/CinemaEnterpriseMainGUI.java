@@ -5,10 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -19,7 +16,6 @@ import javafx.stage.Stage;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class CinemaEnterpriseMainGUI extends Application {
@@ -35,7 +31,7 @@ public class CinemaEnterpriseMainGUI extends Application {
 
     CustomerOrder customerOrder;
 
-    ComboBox<String> dateSelectionCombo;
+    ComboBox<MovieDate> dateSelectionCombo;
     ArrayList<VBox> filmVBoxes = new ArrayList<>();;
 
     Stage mainStage;
@@ -51,7 +47,8 @@ public class CinemaEnterpriseMainGUI extends Application {
         customerOrder = new CustomerOrder();
 
         dateSelectionCombo = new ComboBox<>();
-        dateSelectionCombo.getItems().addAll("4th July", "11th July", "18th July");
+        dateSelectionCombo.getItems().addAll(sat1, sat2, sat3, sat4);
+        dateSelectionCombo.getSelectionModel().select(sat1);
 
         HBox topHBox = new HBox(new Label("Please select a date" ), dateSelectionCombo);
         topHBox.setAlignment(Pos.CENTER);
@@ -60,7 +57,13 @@ public class CinemaEnterpriseMainGUI extends Application {
 
         ScrollPane middleScrollPane = new ScrollPane(showFilms(week1Show));
 
-        Button checkoutButton = new Button("Check Out");
+        Button checkoutButton = new Button();
+        Image basketImage = new Image("file:cart.png");
+        ImageView basketImageView = new ImageView(basketImage);
+        basketImageView.setFitHeight(30);
+        basketImageView.setFitWidth(60);
+        checkoutButton.setGraphic(basketImageView);
+        checkoutButton.setOnAction(actionEvent -> checkoutPressed(week1Show.getDate()) );
         HBox bottomHBox = new HBox(checkoutButton);
         bottomHBox.setAlignment(Pos.CENTER);
         bottomHBox.setPadding(new Insets(10));
@@ -231,4 +234,19 @@ public class CinemaEnterpriseMainGUI extends Application {
         filmDialog.initOwner(mainStage);
         filmDialog.showAndWait();
     }
+
+    private void checkoutPressed(MovieDate date) {
+        if(customerOrder.getFilmsPurchased().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Your basket is empty", ButtonType.OK);
+            alert.show();
+        }
+        else {
+            customerOrder.setDate(new MovieDate());
+            BasketDialog basketDialog = new BasketDialog(customerOrder);
+            basketDialog.initModality(Modality.APPLICATION_MODAL);
+            basketDialog.initOwner(mainStage);
+            basketDialog.showAndWait();
+        }
+    }
+
 }

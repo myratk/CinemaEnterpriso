@@ -1,10 +1,19 @@
 package Domain;
 
 import java.util.Calendar;
+import java.util.Random;
 
 public class TestClass {
     public static void main(String[] args) {
-        MovieDate md = new MovieDate(2020, Calendar.JULY, 4);
-        System.out.println(md);
+        System.out.println(generateInvoiceNum());
+    }
+
+    private static String generateInvoiceNum() {
+        String randomNum = "";
+        for (int i=0; i<7; i++) {
+            Random rand = new Random();
+            randomNum += rand.nextInt(10);
+        }
+        return randomNum;
     }
 }

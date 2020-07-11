@@ -123,6 +123,7 @@ public class FilmDialog extends Stage {
                     alert.showAndWait();
                     show.bookSeats(lectureTheater, tickets);
                     customerOrder.addFilm(film, tickets);
+                    this.close();
                 }
             });
         }

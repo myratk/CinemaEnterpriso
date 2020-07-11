@@ -3,6 +3,7 @@ package Domain;
 import java.util.GregorianCalendar;
 
 public class MovieDate extends GregorianCalendar {
+    public MovieDate() {super(); }
     public MovieDate(int year, int month, int day) {
         super(year, month, day);
     }

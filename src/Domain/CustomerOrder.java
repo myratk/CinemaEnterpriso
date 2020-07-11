@@ -7,6 +7,7 @@ public class CustomerOrder {
     private ArrayList<Integer> ticketsPurchased;
     private ArrayList<Snacks> snacksPurchased;
     private double total;
+    private MovieDate date;
 
     public CustomerOrder(){
         filmsPurchased = new ArrayList<>();
@@ -19,6 +20,14 @@ public class CustomerOrder {
         return filmsPurchased;
     }
 
+    public Film getFilmsPurchased(int index) {
+        return filmsPurchased.get(index);
+    }
+
+    public int getTicketsPurchased(int index) {
+        return ticketsPurchased.get(index);
+    }
+
     public ArrayList<Integer> getTicketsPurchased() {
         return ticketsPurchased;
     }
@@ -27,8 +36,24 @@ public class CustomerOrder {
         return snacksPurchased;
     }
 
-    public double getTotal() {
+    public double getTotalOne(int index) {
+        return filmsPurchased.get(index).getPrice() * ticketsPurchased.get(index);
+    }
+    public double getTotalAll() {
+        double total = 0.0;
+
+        for (int i=0; i<filmsPurchased.size(); i++) {
+            total += getTotalOne(i);
+        }
+
+        if (!snacksPurchased.isEmpty()) {
+            for (int i=0; i<snacksPurchased.size(); i++) {
+                total += snacksPurchased.get(i).getPrice();
+            }
+        }
+
         return total;
+
     } // should calculate total here
 
     public void addFilm(Film film, int tickets) {
@@ -48,6 +73,14 @@ public class CustomerOrder {
 
     public void removeSnack(Snacks snack) {
         snacksPurchased.remove(snack);
+    }
+
+    public void setDate(MovieDate date) {
+        this.date = date;
+    }
+
+    public MovieDate getDate() {
+        return date;
     }
 
     @Override
