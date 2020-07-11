@@ -1,22 +1,20 @@
 package Domain;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 public class Show {
     public static final double SHOWS_PER_WEEK = 10;
     private ArrayList<LectureTheater> lectureTheaters;
-    private HashMap<LectureTheater, Integer> seatsTakenInTheater;
-    private GregorianCalendar date;
+    private ArrayList<Integer> seatsTakenInTheater;
+    private MovieDate date;
 
-    public Show(GregorianCalendar date) {
+    public Show(MovieDate date) {
         this.date = date;
         lectureTheaters = new ArrayList<>();
-        seatsTakenInTheater = new HashMap<>();
+        seatsTakenInTheater = new ArrayList<>();
     }
 
-    public GregorianCalendar getDate() {
+    public MovieDate getDate() {
         return date;
     }
 
@@ -24,19 +22,20 @@ public class Show {
         for (LectureTheater theater : theaters) {
             if (!(theater == null)) {
                 lectureTheaters.add(theater);
-                seatsTakenInTheater.put(theater, 0);
+                seatsTakenInTheater.add(0);
             }
         }
     }
 
-    public boolean bookSeats(LectureTheater theater, int tickets) {
-        if (lectureTheaters.contains(theater)) {
-            if (theater.getTotalSeats() >= (seatsTakenInTheater.get(theater) + tickets)) {
-                seatsTakenInTheater.put(theater, seatsTakenInTheater.get(theater) + tickets);
-                return true;
-            }
-        }
-        return false;
+    public int seatsAvailable(LectureTheater theater) {
+        int index = lectureTheaters.indexOf(theater);
+        return theater.getTotalSeats() - seatsTakenInTheater.get(index);
+    }
+
+    public void bookSeats(LectureTheater theater, int tickets) {
+        int index = lectureTheaters.indexOf(theater);
+        int seatsTaken = seatsTakenInTheater.get(index) + tickets;
+        seatsTakenInTheater.set(index, seatsTaken);
     }
 
     public void addFilms(Film... films) {

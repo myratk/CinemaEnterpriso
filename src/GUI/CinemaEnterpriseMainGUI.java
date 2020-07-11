@@ -23,10 +23,10 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class CinemaEnterpriseMainGUI extends Application {
-    private GregorianCalendar sat1 = new GregorianCalendar(2020, Calendar.JULY, 4);
-    private GregorianCalendar sat2 = new GregorianCalendar(2020, Calendar.JULY, 11);
-    private GregorianCalendar sat3 = new GregorianCalendar(2020, Calendar.JULY, 18);
-    private GregorianCalendar sat4 = new GregorianCalendar(2020, Calendar.JULY, 25);
+    private MovieDate sat1 = new MovieDate(2020, Calendar.JULY, 4);
+    private MovieDate sat2 = new MovieDate(2020, Calendar.JULY, 11);
+    private MovieDate sat3 = new MovieDate(2020, Calendar.JULY, 18);
+    private MovieDate sat4 = new MovieDate(2020, Calendar.JULY, 25);
 
     private Film theDarkKnightFilm1, inceptionFilm2, endgameFilm3, titanicFilm4, avengersFilm5, avatarFilm6,
             getOutFilm7, blackPantherFilm8, callMeByYourNameFilm9, interstellarFilm10;
@@ -196,7 +196,7 @@ public class CinemaEnterpriseMainGUI extends Application {
             filmVBox.setPadding(new Insets(10, 10, 10, 10));
             filmVBox.setOnMouseEntered(mouseEvent -> filmVBox.setBorder(outlineBorder) );
             filmVBox.setOnMouseExited(mouseEvent -> filmVBox.setBorder(noOutlineBorder) );
-            filmVBox.setOnMouseClicked(mouseEvent -> filmSelected(film));
+            filmVBox.setOnMouseClicked(mouseEvent -> filmSelected(show, lt, film) );
 
             filmVBoxes.add(filmVBox);
         }
@@ -225,8 +225,8 @@ public class CinemaEnterpriseMainGUI extends Application {
         return middleVBox;
     }
 
-    private void filmSelected(Film film) {
-        FilmDialog filmDialog = new FilmDialog(film, customerOrder);
+    private void filmSelected(Show show, LectureTheater lectureTheater, Film film) {
+        FilmDialog filmDialog = new FilmDialog(show, lectureTheater, film, customerOrder);
         filmDialog.initModality(Modality.APPLICATION_MODAL);
         filmDialog.initOwner(mainStage);
         filmDialog.showAndWait();

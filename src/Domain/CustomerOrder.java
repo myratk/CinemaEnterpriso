@@ -1,7 +1,6 @@
 package Domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CustomerOrder {
     private ArrayList<Film> filmsPurchased;
@@ -49,5 +48,10 @@ public class CustomerOrder {
 
     public void removeSnack(Snacks snack) {
         snacksPurchased.remove(snack);
+    }
+
+    @Override
+    public String toString() {
+        return filmsPurchased.get(0) + " " + ticketsPurchased.get(0);
     }
 }
