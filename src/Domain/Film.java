@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 public class Film {
     private String filmName, filmReleaseYear;
     private double price;
-    private String ageRestriction;
+    private String ageRestriction, synopsis;
     private Image poster;
 
     public Film(String filmName, String filmReleaseYear, double price, String ageRestriction) {
@@ -13,6 +13,14 @@ public class Film {
         this.filmReleaseYear = filmReleaseYear;
         this.price = price;
         this.ageRestriction = ageRestriction;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 
     public void setPoster(Image poster) {

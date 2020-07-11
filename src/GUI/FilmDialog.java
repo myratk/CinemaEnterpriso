@@ -1,10 +1,14 @@
 package GUI;
 
+import Domain.CustomerOrder;
 import Domain.Film;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -15,7 +19,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class FilmDialog extends Stage {
-    public FilmDialog(Film film) {
+    public FilmDialog(Film film, CustomerOrder customerOrder) {
         ImageView imageView = new ImageView(film.getPoster());
         imageView.setFitWidth(200);
         imageView.setFitHeight(300);
@@ -40,18 +44,45 @@ public class FilmDialog extends Stage {
         topRightVBox.setSpacing(20);
         topRightVBox.setPrefWidth(370);
 
-        /*Label ageLabel = new Label("This film has an age rating of " + film.getAgeRestriction());
-        VBox middleRightVBox = new VBox(ageLabel);
-        middleRightVBox.setAlignment(Pos.CENTER_LEFT);
-        middleRightVBox.setPadding(new Insets(20, 20, 20, 20));
+        Label synopsisText = new Label(film.getSynopsis());
+        synopsisText.setWrapText(true);
+        synopsisText.setAlignment(Pos.CENTER);
+        synopsisText.setMaxWidth(320);
+        VBox middleRightVBox = new VBox(synopsisText);
+        middleRightVBox.setAlignment(Pos.CENTER);
+        middleRightVBox.setPadding(new Insets(10, 10, 10, 10));
         middleRightVBox.setPrefWidth(370);
-        */
 
-        VBox rightVBox = new VBox(topRightVBox);
+        Button addButton = new Button("+");
+        Button minusButton = new Button("-");
+        TextField ticketsTF = new TextField("1");
+        ticketsTF.setAlignment(Pos.CENTER);
+        ticketsTF.setPrefWidth(35);
+
+        HBox bottomRightHBox = new HBox(new Label("Tickets: "), minusButton, ticketsTF, addButton);
+        bottomRightHBox.setSpacing(7);
+        bottomRightHBox.setAlignment(Pos.CENTER);
+        bottomRightHBox.setPadding(new Insets(25));
+
+        VBox rightVBox = new VBox(topRightVBox, middleRightVBox, bottomRightHBox);
 
         HBox topHBox = new HBox(leftVBox, rightVBox);
 
-        Scene filmDialogScene = new Scene(topHBox, 600, 370);
+
+        Button bookButton = new Button("Book Ticket");
+        bookButton.setPrefWidth(100);
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setPrefWidth(100);
+        cancelButton.setOnAction(actionEvent -> this.close() );
+        HBox bottomHBox = new HBox(cancelButton, bookButton);
+        bottomHBox.setAlignment(Pos.CENTER);
+        bottomHBox.setPadding(new Insets(10));
+        bottomHBox.setSpacing(10);
+
+
+        VBox mainVBox = new VBox(topHBox, bottomHBox);
+
+        Scene filmDialogScene = new Scene(mainVBox, 600, 430);
         this.setScene(filmDialogScene);
         this.setResizable(false);
     }

@@ -33,6 +33,8 @@ public class CinemaEnterpriseMainGUI extends Application {
     private LectureTheater lt1, lt2, lt3, lt4, lt5, lt6, lt7, lt8, lt9, lt10;
     private Show week1Show;
 
+    CustomerOrder customerOrder;
+
     ComboBox<String> dateSelectionCombo;
     ArrayList<VBox> filmVBoxes = new ArrayList<>();;
 
@@ -46,6 +48,7 @@ public class CinemaEnterpriseMainGUI extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Cinema Enterprise");
         setShow();
+        customerOrder = new CustomerOrder();
 
         dateSelectionCombo = new ComboBox<>();
         dateSelectionCombo.getItems().addAll("4th July", "11th July", "18th July");
@@ -73,33 +76,79 @@ public class CinemaEnterpriseMainGUI extends Application {
         //Initialize the films
         theDarkKnightFilm1 = new Film("The Dark Knight", "2008",5.80, "12");
         theDarkKnightFilm1.setPoster(new Image("file:TheDarkKnight.jpg"));
+        theDarkKnightFilm1.setSynopsis("With the help of allies Lt. Jim Gordon (Gary Oldman) and DA Harvey Dent (Aaron Eckhart), " +
+                "Batman (Christian Bale) has been able to keep a tight lid on crime in Gotham City. But when a vile young criminal " +
+                "calling himself the Joker (Heath Ledger) suddenly throws the town into chaos, the caped Crusader begins to tread a " +
+                "fine line between heroism and vigilantism.");
 
         inceptionFilm2 = new Film("Inception", "2010", 6.00, "12");
         inceptionFilm2.setPoster(new Image("file:Inception.jpg"));
+        inceptionFilm2.setSynopsis("Dom Cobb (Leonardo DiCaprio) is a thief with the rare ability to enter people's dreams and " +
+                "steal their secrets from their subconscious. His skill has made him a hot commodity in the world of corporate " +
+                "espionage but has also cost him everything he loves. Cobb gets a chance at redemption when he is offered a " +
+                "seemingly impossible task: Plant an idea in someone's mind. If he succeeds, it will be the perfect crime, but a " +
+                "dangerous enemy anticipates Cobb's every move.");
 
         endgameFilm3 = new Film("Avengers: End Game", "2019", 7.50, "12");
         endgameFilm3.setPoster(new Image("file:Endgame.jpg"));
+        endgameFilm3.setSynopsis("Adrift in space with no food or water, Tony Stark sends a message to Pepper Potts as his oxygen supply " +
+                "starts to dwindle. Meanwhile, the remaining Avengers -- Thor, Black Widow, Captain America and Bruce Banner -- must " +
+                "figure out a way to bring back their vanquished allies for an epic showdown with Thanos -- the evil demigod who " +
+                "decimated the planet and the universe.");
 
         titanicFilm4 = new Film("Titanic", "1997", 4.50, "12");
         titanicFilm4.setPoster(new Image("file:titanic.jpg"));
+        titanicFilm4.setSynopsis("James Cameron's \"Titanic\" is an epic, action-packed romance set against the ill-fated maiden " +
+                "voyage of the R.M.S. Titanic; the pride and joy of the White Star Line and, at the time, the largest moving object " +
+                "ever built. She was the most luxurious liner of her era -- the \"ship of dreams\" -- which ultimately carried over " +
+                "1,500 people to their death in the ice cold waters of the North Atlantic in the early hours of April 15, 1912.");
 
         avengersFilm5 = new Film("The Avengers", "2012", 4.50, "12A");
         avengersFilm5.setPoster(new Image("file:Avengers.jpg"));
+        avengersFilm5.setSynopsis("When Thor's evil brother, Loki (Tom Hiddleston), gains access to the unlimited power of the energy " +
+                "cube called the Tesseract, Nick Fury (Samuel L. Jackson), director of S.H.I.E.L.D., initiates a superhero recruitment " +
+                "effort to defeat the unprecedented threat to Earth. Joining Fury's \"dream team\" are Iron Man (Robert Downey Jr.), " +
+                "Captain America (Chris Evans), the Hulk (Mark Ruffalo), Thor (Chris Hemsworth), the Black Widow (Scarlett Johansson) " +
+                "and Hawkeye (Jeremy Renner).");
 
         avatarFilm6 = new Film("Avatar", "2009", 5.00, "12A");
         avatarFilm6.setPoster(new Image("file:Avatar.jpg"));
+        avatarFilm6.setSynopsis("On the lush alien world of Pandora live the Na'vi, beings who appear primitive but are highly evolved. " +
+                "Because the planet's environment is poisonous, human/Na'vi hybrids, called Avatars, must link to human minds to " +
+                "allow for free movement on Pandora. Jake Sully (Sam Worthington), a paralyzed former Marine, becomes mobile again " +
+                "through one such Avatar and falls in love with a Na'vi woman (Zoe Saldana). As a bond with her grows, he is drawn " +
+                "into a battle for the survival of her world.");
 
         getOutFilm7 = new Film("Get Out", "2017", 6.00, "15");
         getOutFilm7.setPoster(new Image("file:GetOut.png"));
+        getOutFilm7.setSynopsis("Now that Chris (Daniel Kaluuya) and his girlfriend, Rose (Allison Williams), have reached the meet-" +
+                "the-parents milestone of dating, she invites him for a weekend getaway upstate with Missy and Dean. At first, Chris " +
+                "reads the family's overly accommodating behavior as nervous attempts to deal with their daughter's interracial relationship, " +
+                "but as the weekend progresses, a series of increasingly disturbing discoveries lead him to a truth that he never could have " +
+                "imagined.");
 
         blackPantherFilm8 = new Film("Black Panther", "2018", 6.00, "!2A");
         blackPantherFilm8.setPoster(new Image("file:BlackPanther.jpg"));
+        blackPantherFilm8.setSynopsis("After the death of his father, T'Challa returns home to the African nation of Wakanda to take " +
+                "his rightful place as king. When a powerful enemy suddenly reappears, T'Challa's mettle as king -- and as Black Panther" +
+                " -- gets tested when he's drawn into a conflict that puts the fate of Wakanda and the entire world at risk. Faced with " +
+                "treachery and danger, the young king must rally his allies and release the full power of Black Panther to defeat his foes " +
+                "and secure the safety of his people.");
 
         callMeByYourNameFilm9 = new Film("Call Me By Your Name", "2017", 4.50, "15");
         callMeByYourNameFilm9.setPoster(new Image("file:CallMeByYourName.jpg"));
+        callMeByYourNameFilm9.setSynopsis("It's the summer of 1983, and precocious 17-year-old Elio Perlman is spending the days with " +
+                "his family at their 17th-century villa in Lombardy, Italy. He soon meets Oliver, a handsome doctoral student who's working " +
+                "as an intern for Elio's father. Amid the sun-drenched splendor of their surroundings, Elio and Oliver discover the heady " +
+                "beauty of awakening desire over the course of a summer that will alter their lives forever.");
 
         interstellarFilm10 = new Film("Interstellar", "2014", 3.50, "12");
         interstellarFilm10.setPoster(new Image("file:Interstellar.jpg"));
+        interstellarFilm10.setSynopsis("In Earth's future, a global crop blight and second Dust Bowl are slowly rendering the planet " +
+                "uninhabitable. Professor Brand (Michael Caine), a brilliant NASA physicist, is working on plans to save mankind by " +
+                "transporting Earth's population to a new home via a wormhole. But first, Brand must send former NASA pilot Cooper " +
+                "(Matthew McConaughey) and a team of researchers through the wormhole and across the galaxy to find out which of " +
+                "three planets could be mankind's new home.");
 
         //Initialize the lecture halls
         lt1 = new LectureTheater("LT1", 200);
@@ -177,7 +226,7 @@ public class CinemaEnterpriseMainGUI extends Application {
     }
 
     private void filmSelected(Film film) {
-        FilmDialog filmDialog = new FilmDialog(film);
+        FilmDialog filmDialog = new FilmDialog(film, customerOrder);
         filmDialog.initModality(Modality.APPLICATION_MODAL);
         filmDialog.initOwner(mainStage);
         filmDialog.showAndWait();
