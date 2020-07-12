@@ -1,6 +1,7 @@
 package GUI;
 
 import Domain.*;
+import Domain.Customer.CustomerOrder;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,7 +64,7 @@ public class CinemaEnterpriseMainGUI extends Application {
         basketImageView.setFitHeight(30);
         basketImageView.setFitWidth(60);
         checkoutButton.setGraphic(basketImageView);
-        checkoutButton.setOnAction(actionEvent -> checkoutPressed(week1Show.getDate()) );
+        checkoutButton.setOnAction(actionEvent -> checkoutPressed() );
         HBox bottomHBox = new HBox(checkoutButton);
         bottomHBox.setAlignment(Pos.CENTER);
         bottomHBox.setPadding(new Insets(10));
@@ -235,8 +236,8 @@ public class CinemaEnterpriseMainGUI extends Application {
         filmDialog.showAndWait();
     }
 
-    private void checkoutPressed(MovieDate date) {
-        if(customerOrder.getFilmsPurchased().isEmpty()) {
+    private void checkoutPressed() {
+        if(customerOrder.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Your basket is empty", ButtonType.OK);
             alert.show();
         }

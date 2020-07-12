@@ -1,8 +1,7 @@
 package GUI;
 
 import Domain.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import Domain.Customer.CustomerOrder;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -122,7 +121,7 @@ public class FilmDialog extends Stage {
                             tickets + " tickets for " + film.getFilmName() + " have been added to basket", ButtonType.OK);
                     alert.showAndWait();
                     show.bookSeats(lectureTheater, tickets);
-                    customerOrder.addFilm(film, tickets);
+                    customerOrder.addBooking(film, lectureTheater, tickets);
                     this.close();
                 }
             });

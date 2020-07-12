@@ -1,19 +1,9 @@
 package GUI;
 
-import Domain.CustomerOrder;
-import Domain.Film;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+import Domain.Customer.CustomerOrder;
 import javafx.stage.Stage;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
@@ -22,7 +12,7 @@ public class ReceiptDialog extends Stage {
         this.setTitle("Receipt");
 
         NumberFormat gb = NumberFormat.getCurrencyInstance(Locale.UK);
-
+        /*
         Label uniLabel = new Label("Enterprising University");
         uniLabel.setFont(new Font(20));
         HBox detailHBox = new HBox(new Label("Invoice no: " + generateInvoiceNum()), new Label("Date: " + customerOrder.getDate()));
@@ -76,6 +66,8 @@ public class ReceiptDialog extends Stage {
         VBox mainVBox = new VBox (topVBox, middleVBox);
         Scene scene = new Scene(mainVBox, 400, 500);
         this.setScene(scene);
+
+         */
     }
 
     private String generateInvoiceNum() {

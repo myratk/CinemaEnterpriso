@@ -1,4 +1,4 @@
-package Domain;
+package Domain.Snacks;
 
 public class Snacks {
     private String name;
