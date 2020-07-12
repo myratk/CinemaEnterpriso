@@ -4,16 +4,12 @@ import java.util.Calendar;
 import java.util.Random;
 
 public class TestClass {
-    public static void main(String[] args) {
-        System.out.println(generateInvoiceNum());
-    }
+    enum Size {small, medium, large};
 
-    private static String generateInvoiceNum() {
-        String randomNum = "";
-        for (int i=0; i<7; i++) {
-            Random rand = new Random();
-            randomNum += rand.nextInt(10);
-        }
-        return randomNum;
+    public static void main(String[] args) {
+        Size size = Size.small;
+        System.out.println(size.ordinal());
+
+
     }
 }

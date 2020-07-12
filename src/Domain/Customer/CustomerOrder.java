@@ -1,25 +1,24 @@
 package Domain.Customer;
 
-import Domain.Customer.Booking;
 import Domain.Film;
 import Domain.LectureTheater;
 import Domain.MovieDate;
-import Domain.Snacks.Snacks;
+import Domain.Snacks.Snack;
 
 import java.util.ArrayList;
 
 public class CustomerOrder {
     private ArrayList<Booking> bookings;
-    private ArrayList<Snacks> snacksPurchased;
+    private ArrayList<Snack> snackPurchased;
     private MovieDate date;
 
     public CustomerOrder(){
         bookings = new ArrayList<>();
-        snacksPurchased = new ArrayList<>();
+        snackPurchased = new ArrayList<>();
     }
 
-    public ArrayList<Snacks> getSnacksPurchased() {
-        return snacksPurchased;
+    public ArrayList<Snack> getSnackPurchased() {
+        return snackPurchased;
     }
 
     public double getTotal() {
@@ -29,8 +28,8 @@ public class CustomerOrder {
            total += booking.getTotal();
        }
 
-       for (Snacks snack : snacksPurchased) {
-           total += snack.getPrice();
+       for (Snack snack : snackPurchased) {
+           //total += snack.getPrice();
        }
 
         return total;
@@ -57,12 +56,12 @@ public class CustomerOrder {
         return bookings.isEmpty();
     }
 
-    public void addSnack(Snacks snack) {
-        snacksPurchased.add(snack);
+    public void addSnack(Snack snack) {
+        snackPurchased.add(snack);
     }
 
-    public void removeSnack(Snacks snack) {
-        snacksPurchased.remove(snack);
+    public void removeSnack(Snack snack) {
+        snackPurchased.remove(snack);
     }
 
     public void setDate(MovieDate date) {
