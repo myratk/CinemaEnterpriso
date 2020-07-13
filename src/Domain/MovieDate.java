@@ -14,6 +14,6 @@ public class MovieDate extends GregorianCalendar {
 
     @Override
     public String toString() {
-        return super.getTime().getDate() + "/" + (super.getTime().getMonth()+1) + ", " + "Saturday";
+        return super.getTime().getDate() + "/" + (super.getTime().getMonth()+1) + ", " + "Sat";
     }
 }

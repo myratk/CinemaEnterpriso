@@ -5,25 +5,33 @@ import Domain.Snacks.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
 public class SnacksDialog extends Stage {
-    SnackMenuCategory popcornCategory, hotBeverageCategory, coldBeverageCategory;
-    ArrayList<SnackMenuCategory> allCategories = new ArrayList<>();
-    ArrayList<Snack> selectedSnackMenu = new ArrayList<>();
+    private SnackMenuCategory popcornCategory, hotBeverageCategory, coldBeverageCategory;
+    private ArrayList<SnackMenuCategory> allCategories = new ArrayList<>();
+    //private ArrayList<Snack> selectedSnackMenu = new ArrayList<>();
 
-    ScrollPane rightScrollPane;
+    private CustomerOrder customerOrder;
+
+    private ScrollPane rightScrollPane;
+    private final Border outlineBorder = new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, null, null));
+    private final Border noOutlineBorder = new Border(new BorderStroke(null, null, null, null));
+    private VBox currentCategorySelected;
 
     public SnacksDialog(CustomerOrder customerOrder) {
+        this.customerOrder = customerOrder;
         this.setTitle("Snacks Menu");
 
         Label titleLabel = new Label("Movie Snacks Menu");
@@ -34,32 +42,25 @@ public class SnacksDialog extends Stage {
 
         setSnacks();
 
-        VBox leftVBox = new VBox();
-        for (SnackMenuCategory snackMenuCategory : allCategories) {
-            ImageView categoryImageView = new ImageView(snackMenuCategory.getIcon());
-            categoryImageView.setFitWidth(100);
-            categoryImageView.setFitHeight(90);
-
-            VBox categoryVBox = new VBox(categoryImageView, new Label(snackMenuCategory.getName()));
-            categoryVBox.setAlignment(Pos.CENTER);
-            categoryVBox.setSpacing(3);
-            categoryVBox.setOnMouseClicked(mouseEvent -> categoryClicked(snackMenuCategory) );
-            leftVBox.getChildren().add(categoryVBox);
-        }
-        leftVBox.setSpacing(10);
-        leftVBox.setAlignment(Pos.CENTER);
-        leftVBox.setPadding(new Insets(5, 5, 5, 5));
-
-        ScrollPane leftScrollPane = new ScrollPane(leftVBox);
-        leftScrollPane.setPrefSize(150, 300);
+        ScrollPane leftScrollPane = new ScrollPane(showCategories());
+        leftScrollPane.setPrefSize(165, 300);
 
         rightScrollPane = new ScrollPane(showSnacks(popcornCategory));
-        rightScrollPane.setPrefSize(350, 300);
+        rightScrollPane.setPrefSize(390, 300);
 
         HBox middleHBox = new HBox(leftScrollPane, rightScrollPane);
         middleHBox.setSpacing(5);
         middleHBox.setPadding(new Insets(10, 10, 10, 10));
         middleHBox.setAlignment(Pos.CENTER);
+
+        Button doneButton = new Button("Done");
+        doneButton.setOnAction(actionEvent -> {
+            this.close();
+        });
+
+        HBox bottomHBox = new HBox(doneButton);
+        bottomHBox.setAlignment(Pos.CENTER);
+        bottomHBox.setPadding(new Insets(20, 20, 20, 20));
 
         VBox mainVBox = new VBox(topVBox, middleHBox);
         Scene scene = new Scene(mainVBox, 600, 500);
@@ -105,6 +106,35 @@ public class SnacksDialog extends Stage {
         allCategories.add(coldBeverageCategory);
     }
 
+    private VBox showCategories() {
+        VBox leftVBox = new VBox();
+        for (SnackMenuCategory snackMenuCategory : allCategories) {
+            ImageView categoryImageView = new ImageView(snackMenuCategory.getIcon());
+            categoryImageView.setFitWidth(110);
+            categoryImageView.setFitHeight(120);
+
+            VBox categoryVBox = new VBox(categoryImageView, new Label(snackMenuCategory.getName()));
+            categoryVBox.setPrefWidth(140);
+            categoryVBox.setAlignment(Pos.CENTER);
+            categoryVBox.setSpacing(3);
+            categoryVBox.setOnMouseClicked(mouseEvent -> {
+                currentCategorySelected.setBorder(noOutlineBorder);
+                categoryVBox.setBorder(outlineBorder);
+                currentCategorySelected = categoryVBox;
+                rightScrollPane.setContent(showSnacks(snackMenuCategory));
+            } );
+            if (snackMenuCategory.getName().equals("Popcorn")) {
+                currentCategorySelected = categoryVBox;
+                currentCategorySelected.setBorder(outlineBorder);
+            }
+            leftVBox.getChildren().add(categoryVBox);
+        }
+        leftVBox.setSpacing(10);
+        leftVBox.setAlignment(Pos.CENTER);
+        leftVBox.setPadding(new Insets(5, 5, 5, 5));
+        return leftVBox;
+    }
+
     private VBox showSnacks(SnackMenuCategory snackMenuCategory) {
         ArrayList<Snack>snackMenu = snackMenuCategory.getSnackMenu();
         VBox rightVBox = new VBox();
@@ -120,6 +150,13 @@ public class SnacksDialog extends Stage {
             snackVBox.setAlignment(Pos.CENTER);
             snackVBox.setPadding(new Insets(10, 10, 10, 10));
             snackVBox.setSpacing(3);
+            snackVBox.setOnMouseEntered(mouseEvent -> snackVBox.setBorder(outlineBorder) );
+            snackVBox.setOnMouseExited(mouseEvent -> snackVBox.setBorder(noOutlineBorder) );
+            snackVBox.setOnMouseClicked(mouseEvent -> {
+                SnackDisplayGUI snackDisplayGUI = new SnackDisplayGUI(customerOrder, snack);
+                snackDisplayGUI.initModality(Modality.APPLICATION_MODAL);
+                snackDisplayGUI.showAndWait();
+            } );
             snackVBoxes.add(snackVBox);
         }
         HBox snackHBox;
@@ -132,9 +169,5 @@ public class SnacksDialog extends Stage {
             rightVBox.getChildren().add(snackHBox);
         }
         return rightVBox;
-    }
-
-    private void categoryClicked(SnackMenuCategory snackMenuCategory) {
-        rightScrollPane.setContent(showSnacks(snackMenuCategory));
     }
 }

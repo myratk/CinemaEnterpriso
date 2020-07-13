@@ -9,7 +9,7 @@ public class Snack {
     private Image picture;
     public enum Size {small, medium, large}
     ArrayList<Double> prices;
-
+    
     public Snack(String name, double priceS, double priceM, double priceL) {
         this.name = name;
         prices = new ArrayList<>();
@@ -33,4 +33,5 @@ public class Snack {
     public void setPicture(Image picture) {
         this.picture = picture;
     }
+
 }

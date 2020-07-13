@@ -121,7 +121,7 @@ public class FilmDialog extends Stage {
                             tickets + " tickets for " + film.getFilmName() + " have been added to basket", ButtonType.OK);
                     alert.showAndWait();
                     show.bookSeats(lectureTheater, tickets);
-                    customerOrder.addBooking(film, lectureTheater, tickets);
+                    customerOrder.addBooking(film, lectureTheater, tickets, show.getDate());
                     this.close();
                 }
             });

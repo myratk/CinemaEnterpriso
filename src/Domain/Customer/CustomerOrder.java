@@ -9,16 +9,16 @@ import java.util.ArrayList;
 
 public class CustomerOrder {
     private ArrayList<Booking> bookings;
-    private ArrayList<Snack> snackPurchased;
+    private ArrayList<SnackPurchased> snacksPurchased;
     private MovieDate date;
 
     public CustomerOrder(){
         bookings = new ArrayList<>();
-        snackPurchased = new ArrayList<>();
+        snacksPurchased = new ArrayList<>();
     }
 
-    public ArrayList<Snack> getSnackPurchased() {
-        return snackPurchased;
+    public ArrayList<SnackPurchased> getSnacksPurchased() {
+        return snacksPurchased;
     }
 
     public double getTotal() {
@@ -28,7 +28,7 @@ public class CustomerOrder {
            total += booking.getTotal();
        }
 
-       for (Snack snack : snackPurchased) {
+       for (SnackPurchased snackPurchased : snacksPurchased) {
            //total += snack.getPrice();
        }
 
@@ -36,8 +36,8 @@ public class CustomerOrder {
 
     }
 
-    public void addBooking(Film film, LectureTheater lectureTheater, int tickets) {
-        bookings.add(new Booking(film, lectureTheater, tickets));
+    public void addBooking(Film film, LectureTheater lectureTheater, int tickets, MovieDate movieDate) {
+        bookings.add(new Booking(film, lectureTheater, tickets, movieDate));
     }
 
     public void removeBooking(Booking booking) {
@@ -52,16 +52,21 @@ public class CustomerOrder {
         return bookings.get(index);
     }
 
-    public boolean isEmpty() {
+    public boolean isBookingsEmpty() {
         return bookings.isEmpty();
     }
 
-    public void addSnack(Snack snack) {
-        snackPurchased.add(snack);
+    public int getNumberOfSnacks() {
+        return snacksPurchased.size();
+    }
+
+    public SnackPurchased getSnackPurchased(int index) { return snacksPurchased.get(index); }
+    public void addSnack(SnackPurchased snackPurchased) {
+        snacksPurchased.add(snackPurchased);
     }
 
     public void removeSnack(Snack snack) {
-        snackPurchased.remove(snack);
+        snacksPurchased.remove(snack);
     }
 
     public void setDate(MovieDate date) {

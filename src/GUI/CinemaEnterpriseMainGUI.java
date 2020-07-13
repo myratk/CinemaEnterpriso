@@ -237,7 +237,7 @@ public class CinemaEnterpriseMainGUI extends Application {
     }
 
     private void checkoutPressed() {
-        if(customerOrder.isEmpty()) {
+        if(customerOrder.isBookingsEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Your basket is empty", ButtonType.OK);
             alert.show();
         }
