@@ -27,6 +27,8 @@ public class SnackDisplayGUI extends Stage {
         Label titleLabel = new Label(snack.getName());
         titleLabel.setFont(new Font(24));
         HBox topHBox = new HBox(titleLabel);
+        topHBox.setAlignment(Pos.CENTER);
+        topHBox.setPadding(new Insets(10, 10, 10, 10));
 
         ImageView snackImageView = new ImageView(snack.getPicture());
         snackImageView.setFitWidth(250);
@@ -105,7 +107,7 @@ public class SnackDisplayGUI extends Stage {
         HBox middleHBox = new HBox(leftHBox, rightVBox);
 
         VBox mainVBox = new VBox(topHBox, middleHBox, bottomHBox);
-        Scene scene = new Scene(mainVBox, 600, 300);
+        Scene scene = new Scene(mainVBox, 600, 290);
         this.setScene(scene);
     }
 

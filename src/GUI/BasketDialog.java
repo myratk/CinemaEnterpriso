@@ -5,7 +5,6 @@ import Domain.Customer.CustomerOrder;
 import Domain.Customer.SnackPurchased;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,6 +23,7 @@ import java.util.Locale;
 public class BasketDialog extends Stage {
     ScrollPane snackScrollPane;
     Label snackLabel, quantityLabel, costLabel;
+    Label totalCostL1, totalCostL2, totalCostL3;
 
     public BasketDialog(CustomerOrder customerOrder) {
         this.setTitle("Your Basket");
@@ -55,7 +56,7 @@ public class BasketDialog extends Stage {
             filmLabel.setAlignment(Pos.CENTER_LEFT); filmLabel.setPrefWidth(200);
 
             theaterLabel = new Label(custBooking.getLectureTheater().getName());
-            theaterLabel.setAlignment(Pos.CENTER_LEFT); theaterLabel.setPrefWidth(100);
+            theaterLabel.setAlignment(Pos.CENTER_LEFT); theaterLabel.setPrefWidth(80);
 
             dateLabel = new Label("" + custBooking.getDate());
             dateLabel.setAlignment(Pos.CENTER_LEFT); dateLabel.setPrefWidth(100);
@@ -66,7 +67,20 @@ public class BasketDialog extends Stage {
             priceLabel = new Label("" + gb.format(custBooking.getTotal()));
             priceLabel.setAlignment(Pos.CENTER_RIGHT); priceLabel.setPrefWidth(50);
 
-            HBox bookingHBox = new HBox(filmLabel, theaterLabel, dateLabel, ticketsLabel, priceLabel);
+            ImageView redCross = new ImageView(new Image("file:cancelIcon.jpg"));
+            redCross.setFitWidth(20); redCross.setFitHeight(20);
+            VBox removeVBox = new VBox(redCross);
+            removeVBox.setOnMouseEntered(mouseEvent -> removeVBox.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, null, null))));
+            removeVBox.setOnMouseExited(mouseEvent -> removeVBox.setBorder(new Border(new BorderStroke(null, null, null, null))));
+
+            HBox bookingHBox = new HBox(filmLabel, theaterLabel, dateLabel, ticketsLabel, priceLabel, new Label("  "), removeVBox);
+            removeVBox.setOnMouseClicked(mouseEvent -> {
+                customerOrderVBox.getChildren().remove(bookingHBox);
+                customerOrder.removeBooking(custBooking);
+                totalCostL1.setText("Total Cost: " + gb.format(customerOrder.getFilmTotal()));
+                totalCostL3.setText("Total: " + gb.format(customerOrder.getTotal()));
+            });
+
             customerOrderVBox.getChildren().add(bookingHBox);
         }
         customerOrderVBox.setSpacing(5);
@@ -75,11 +89,11 @@ public class BasketDialog extends Stage {
         ScrollPane filmsScrollPane = new ScrollPane(customerOrderVBox);
         filmsScrollPane.setPrefSize(430, 160);
 
-        Label totalCostL = new Label("Total Cost: " + gb.format(customerOrder.getTotal()));
-        totalCostL.setAlignment(Pos.CENTER_RIGHT);
-        totalCostL.setPrefWidth(520);
+        totalCostL1 = new Label("Total Cost: " + gb.format(customerOrder.getFilmTotal()));
+        totalCostL1.setAlignment(Pos.CENTER_RIGHT);
+        totalCostL1.setPrefWidth(520);
 
-        VBox topMiddleVBox = new VBox(headingHBox, filmsScrollPane, totalCostL);
+        VBox topMiddleVBox = new VBox(headingHBox, filmsScrollPane, totalCostL1);
         topMiddleVBox.setPadding(new Insets(10, 10, 10, 10));
         topMiddleVBox.setSpacing(5);
 
@@ -95,9 +109,17 @@ public class BasketDialog extends Stage {
         snackScrollPane.setPrefSize(430, 100);
         snackScrollPane.setVisible(false);
 
-        VBox bottomMiddleVBox = new VBox(headingHBox2, snackScrollPane);
+        totalCostL2 = new Label("Total Cost: " + gb.format(customerOrder.getSnackTotal()));
+        totalCostL2.setAlignment(Pos.CENTER_RIGHT);
+        totalCostL2.setPrefWidth(520);
+
+        VBox bottomMiddleVBox = new VBox(headingHBox2, snackScrollPane, totalCostL2);
         bottomMiddleVBox.setPadding(new Insets(10, 10, 10, 10));
         bottomMiddleVBox.setSpacing(5);
+
+        totalCostL3 = new Label("Total: " + gb.format(customerOrder.getTotal()));
+        totalCostL3.setAlignment(Pos.CENTER);
+        totalCostL3.setFont(new Font(18));
 
         Button snacksButton = new Button("Add Snacks");
         ImageView snackImageView = new ImageView(new Image("file:snacksIcon.png"));
@@ -110,16 +132,18 @@ public class BasketDialog extends Stage {
             snacksDialog.showAndWait();
             snackScrollPane.setVisible(true);
             snackScrollPane.setContent(showSnacks(customerOrder));
+            totalCostL2.setText("Total Cost: " + gb.format(customerOrder.getSnackTotal()));
+            totalCostL3.setText("Total: " + gb.format(customerOrder.getTotal()));
         } );
 
         Button checkOutButton = new Button("Check Out");
         Button backButton = new Button("Go Back");
         backButton.setOnAction(actionEvent -> this.close() );
-        HBox buttonsHBox = new HBox(checkOutButton, backButton);
+        HBox buttonsHBox = new HBox(backButton, checkOutButton);
         buttonsHBox.setAlignment(Pos.CENTER);
-        buttonsHBox.setSpacing(30);
+        buttonsHBox.setSpacing(40);
 
-        VBox bottomVBox = new VBox(snacksButton, buttonsHBox);
+        VBox bottomVBox = new VBox(snacksButton, totalCostL3, buttonsHBox);
         bottomVBox.setPadding(new Insets(20, 10, 10, 10));
         bottomVBox.setAlignment(Pos.CENTER);
         bottomVBox.setSpacing(30);
@@ -144,7 +168,19 @@ public class BasketDialog extends Stage {
             costLabel = new Label("" + gb.format(snackPurchased.getTotal()));
             costLabel.setAlignment(Pos.CENTER_RIGHT); costLabel.setPrefWidth(100);
 
-            HBox oneSnackHBox = new HBox(snackLabel, quantityLabel, costLabel);
+            ImageView redCross = new ImageView(new Image("file:cancelIcon.jpg"));
+            redCross.setFitWidth(20); redCross.setFitHeight(20);
+            VBox removeVBox = new VBox(redCross);
+            removeVBox.setOnMouseEntered(mouseEvent -> removeVBox.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, null, null))));
+            removeVBox.setOnMouseExited(mouseEvent -> removeVBox.setBorder(new Border(new BorderStroke(null, null, null, null))));
+
+            HBox oneSnackHBox = new HBox(snackLabel, quantityLabel, costLabel, new Label("  "), removeVBox);
+            removeVBox.setOnMouseClicked(mouseEvent -> {
+                snacksVBox.getChildren().remove(oneSnackHBox);
+                customerOrder.removeSnack(snackPurchased);
+                totalCostL2.setText("Total Cost: " + gb.format(customerOrder.getSnackTotal()));
+                totalCostL3.setText("Total: " + gb.format(customerOrder.getTotal()));
+            });
             snacksVBox.getChildren().add(oneSnackHBox);
         }
         return snacksVBox;

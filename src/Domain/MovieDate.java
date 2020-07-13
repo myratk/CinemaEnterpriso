@@ -16,4 +16,8 @@ public class MovieDate extends GregorianCalendar {
     public String toString() {
         return super.getTime().getDate() + "/" + (super.getTime().getMonth()+1) + ", " + "Sat";
     }
+
+    public boolean equals(MovieDate date) {
+        return (this.getTime().getDate() == date.getTime().getDate()) && (this.getTime().getMonth() == this.getTime().getMonth());
+    }
 }

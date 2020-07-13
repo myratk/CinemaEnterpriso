@@ -71,7 +71,10 @@ public class FilmDialog extends Stage {
         addButton.setOnAction(actionEvent -> addTicketsPressed() );
         Button minusButton = new Button("-");
         minusButton.setOnAction(actionEvent -> minusTicketPressed() );
-        ticketsTF = new TextField("1");
+        if (customerOrder.containsBooking(film, show.getDate()))
+            ticketsTF = new TextField("" + customerOrder.getTicketsOfABooking(film, show.getDate()));
+        else
+            ticketsTF = new TextField("1");
         ticketsTF.setEditable(false);
         ticketsTF.setAlignment(Pos.CENTER);
         ticketsTF.setPrefWidth(35);
@@ -120,8 +123,16 @@ public class FilmDialog extends Stage {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION,
                             tickets + " tickets for " + film.getFilmName() + " have been added to basket", ButtonType.OK);
                     alert.showAndWait();
-                    show.bookSeats(lectureTheater, tickets);
-                    customerOrder.addBooking(film, lectureTheater, tickets, show.getDate());
+                    if (customerOrder.containsBooking(film, show.getDate())) {
+                        int previousTickets = customerOrder.getTicketsOfABooking(film, show.getDate());
+                        show.editBookedSeats(lectureTheater, previousTickets, tickets);
+                        System.out.println(show.seatsAvailable(lectureTheater));
+                        customerOrder.editBooking(film, show.getDate(), tickets);
+                    }
+                    else {
+                        show.bookSeats(lectureTheater, tickets);
+                        customerOrder.addBooking(film, lectureTheater, tickets, show.getDate());
+                    }
                     this.close();
                 }
             });

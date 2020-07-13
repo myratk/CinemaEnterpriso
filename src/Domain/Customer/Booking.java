@@ -33,12 +33,12 @@ public class Booking {
         return date;
     }
 
-    public void addTickets(int tickets) {
-        noOfTickets += tickets;
+    public void setTickets(int tickets) {
+        noOfTickets = tickets;
     }
 
     public double getTotal() {
-        return film.getPrice() + noOfTickets;
+        return film.getPrice() * noOfTickets;
     }
 
 }

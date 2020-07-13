@@ -38,6 +38,12 @@ public class Show {
         seatsTakenInTheater.set(index, seatsTaken);
     }
 
+    public void editBookedSeats(LectureTheater lectureTheater, int previousTickets, int newTickets) {
+        int index = lectureTheaters.indexOf(lectureTheater);
+        seatsTakenInTheater.set(index, seatsTakenInTheater.get(index) - previousTickets);
+        seatsTakenInTheater.set(index, seatsTakenInTheater.get(index) + newTickets);
+    }
+
     public void addFilms(Film... films) {
         int i=0;
         for (Film f : films) {

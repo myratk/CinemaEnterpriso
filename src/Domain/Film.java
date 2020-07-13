@@ -44,4 +44,8 @@ public class Film {
     public String getAgeRestriction() {
         return ageRestriction;
     }
+
+    public boolean equals(Film film) {
+        return this.filmName.equals(film.filmName);
+    }
 }

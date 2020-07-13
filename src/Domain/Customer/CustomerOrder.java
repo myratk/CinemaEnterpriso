@@ -5,6 +5,7 @@ import Domain.LectureTheater;
 import Domain.MovieDate;
 import Domain.Snacks.Snack;
 
+import java.awt.print.Book;
 import java.util.ArrayList;
 
 public class CustomerOrder {
@@ -21,19 +22,23 @@ public class CustomerOrder {
         return snacksPurchased;
     }
 
-    public double getTotal() {
+    public double getFilmTotal() {
         double total = 0.0;
-
        for (Booking booking : bookings) {
            total += booking.getTotal();
        }
-
-       for (SnackPurchased snackPurchased : snacksPurchased) {
-           //total += snack.getPrice();
-       }
-
         return total;
+    }
 
+    public double getSnackTotal() {
+        double total = 0.0;
+        for (SnackPurchased snack : snacksPurchased) {
+          total += snack.getTotal();
+        }
+        return total;
+    }
+    public double getTotal() {
+        return getFilmTotal() + getSnackTotal();
     }
 
     public void addBooking(Film film, LectureTheater lectureTheater, int tickets, MovieDate movieDate) {
@@ -56,6 +61,29 @@ public class CustomerOrder {
         return bookings.isEmpty();
     }
 
+    public boolean containsBooking(Film film, MovieDate date) {
+        for (Booking booking : bookings) {
+            if (booking.getFilm().equals(film) && booking.getDate().equals(date))
+                return true;
+        }
+        return false;
+    }
+
+    public int getTicketsOfABooking(Film film, MovieDate date) {
+        for (Booking booking : bookings) {
+            if(booking.getFilm().equals(film) && booking.getDate().equals(date))
+                return booking.getNoOfTickets();
+        }
+        return 0;
+    }
+
+    public void editBooking(Film film, MovieDate date, int tickets) {
+        for (Booking booking : bookings) {
+            if(booking.getFilm().equals(film) && booking.getDate().equals(date))
+                booking.setTickets(tickets);
+        }
+    }
+
     public int getNumberOfSnacks() {
         return snacksPurchased.size();
     }
@@ -65,7 +93,7 @@ public class CustomerOrder {
         snacksPurchased.add(snackPurchased);
     }
 
-    public void removeSnack(Snack snack) {
+    public void removeSnack(SnackPurchased snack) {
         snacksPurchased.remove(snack);
     }
 

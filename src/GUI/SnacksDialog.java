@@ -54,6 +54,7 @@ public class SnacksDialog extends Stage {
         middleHBox.setAlignment(Pos.CENTER);
 
         Button doneButton = new Button("Done");
+        doneButton.setFont(new Font(18));
         doneButton.setOnAction(actionEvent -> {
             this.close();
         });
@@ -63,7 +64,7 @@ public class SnacksDialog extends Stage {
         bottomHBox.setPadding(new Insets(20, 20, 20, 20));
 
         VBox mainVBox = new VBox(topVBox, middleHBox, bottomHBox);
-        Scene scene = new Scene(mainVBox, 600, 500);
+        Scene scene = new Scene(mainVBox, 600, 450);
         this.setScene(scene);
     }
 

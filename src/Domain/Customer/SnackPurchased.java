@@ -1,9 +1,9 @@
 package Domain.Customer;
 
 public class SnackPurchased {
-    String name;
-    double price;
-    int quantity;
+    private String name;
+    private double price;
+    private int quantity;
 
     public SnackPurchased(String name, double price, int quantity) {
         this.name = name;
