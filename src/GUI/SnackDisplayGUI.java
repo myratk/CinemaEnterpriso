@@ -6,10 +6,7 @@ import Domain.Snacks.Snack;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -89,8 +86,14 @@ public class SnackDisplayGUI extends Stage {
 
         Button addToBasket = new Button("Add Items");
         addToBasket.setOnAction(actionEvent -> {
-            customerOrder.addSnack(new SnackPurchased(snack.getName(), snack.getPrice(chosenSize), Integer.parseInt(quantTF.getText())));
-            this.close();
+            if (chosenSize == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "PLease choose a size", ButtonType.OK);
+                alert.showAndWait();
+            }
+            else {
+                customerOrder.addSnack(new SnackPurchased(snack.getName(), snack.getPrice(chosenSize), Integer.parseInt(quantTF.getText())));
+                this.close();
+            }
         });
         Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction(actionEvent -> this.close() );

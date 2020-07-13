@@ -62,7 +62,7 @@ public class SnacksDialog extends Stage {
         bottomHBox.setAlignment(Pos.CENTER);
         bottomHBox.setPadding(new Insets(20, 20, 20, 20));
 
-        VBox mainVBox = new VBox(topVBox, middleHBox);
+        VBox mainVBox = new VBox(topVBox, middleHBox, bottomHBox);
         Scene scene = new Scene(mainVBox, 600, 500);
         this.setScene(scene);
     }

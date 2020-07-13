@@ -113,15 +113,20 @@ public class BasketDialog extends Stage {
         } );
 
         Button checkOutButton = new Button("Check Out");
+        Button backButton = new Button("Go Back");
+        backButton.setOnAction(actionEvent -> this.close() );
+        HBox buttonsHBox = new HBox(checkOutButton, backButton);
+        buttonsHBox.setAlignment(Pos.CENTER);
+        buttonsHBox.setSpacing(30);
 
-        VBox bottomVBox = new VBox(snacksButton, checkOutButton);
+        VBox bottomVBox = new VBox(snacksButton, buttonsHBox);
         bottomVBox.setPadding(new Insets(20, 10, 10, 10));
         bottomVBox.setAlignment(Pos.CENTER);
         bottomVBox.setSpacing(30);
 
 
         VBox mainVBox = new VBox(topVBox, topMiddleVBox, bottomMiddleVBox, bottomVBox);
-        Scene scene = new Scene(mainVBox, 550, 600);
+        Scene scene = new Scene(mainVBox, 550, 550);
         this.setScene(scene);
     }
 
