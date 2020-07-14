@@ -1,7 +1,7 @@
 package GUI;
 
 import Domain.Customer.Booking;
-import Domain.Customer.CustomerOrder;
+import Domain.Customer.CustomerBasket;
 import Domain.Customer.SnackPurchased;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,10 +22,10 @@ import java.util.Locale;
 
 public class BasketDialog extends Stage {
     ScrollPane snackScrollPane;
-    Label snackLabel, quantityLabel, costLabel;
+    Label snackLabel, sizeLabel, quantityLabel, costLabel;
     Label totalCostL1, totalCostL2, totalCostL3;
 
-    public BasketDialog(CustomerOrder customerOrder) {
+    public BasketDialog(CustomerBasket customerBasket) {
         this.setTitle("Your Basket");
 
         Label titleLabel = new Label("Enterprising University");
@@ -39,19 +39,19 @@ public class BasketDialog extends Stage {
         Label filmLabel = new Label("Film");
         filmLabel.setAlignment(Pos.CENTER_LEFT); filmLabel.setPrefWidth(200);
         Label theaterLabel = new Label("Theater");
-        theaterLabel.setAlignment(Pos.CENTER_LEFT); theaterLabel.setPrefWidth(100);
+        theaterLabel.setAlignment(Pos.CENTER_LEFT); theaterLabel.setPrefWidth(80);
         Label dateLabel = new Label("Date");
         dateLabel.setAlignment(Pos.CENTER_LEFT); dateLabel.setPrefWidth(100);
         Label ticketsLabel = new Label("Tickets");
-        ticketsLabel.setAlignment(Pos.CENTER_LEFT); ticketsLabel.setPrefWidth(50);
+        ticketsLabel.setAlignment(Pos.CENTER); ticketsLabel.setPrefWidth(50);
         Label priceLabel = new Label("Cost");
-        priceLabel.setAlignment(Pos.CENTER_RIGHT); priceLabel.setPrefWidth(50);
+        priceLabel.setAlignment(Pos.CENTER); priceLabel.setPrefWidth(50);
         HBox headingHBox = new HBox(filmLabel, theaterLabel, dateLabel, ticketsLabel, priceLabel);
 
         NumberFormat gb = NumberFormat.getCurrencyInstance(Locale.UK);
         VBox customerOrderVBox = new VBox();
-        for(int i=0; i<customerOrder.getNoOfBookings(); i++) {
-            Booking custBooking = customerOrder.getBooking(i);
+        for(int i = 0; i< customerBasket.getNoOfBookings(); i++) {
+            Booking custBooking = customerBasket.getBooking(i);
             filmLabel = new Label(custBooking.getFilm().getFilmName());
             filmLabel.setAlignment(Pos.CENTER_LEFT); filmLabel.setPrefWidth(200);
 
@@ -76,20 +76,20 @@ public class BasketDialog extends Stage {
             HBox bookingHBox = new HBox(filmLabel, theaterLabel, dateLabel, ticketsLabel, priceLabel, new Label("  "), removeVBox);
             removeVBox.setOnMouseClicked(mouseEvent -> {
                 customerOrderVBox.getChildren().remove(bookingHBox);
-                customerOrder.removeBooking(custBooking);
-                totalCostL1.setText("Total Cost: " + gb.format(customerOrder.getFilmTotal()));
-                totalCostL3.setText("Total: " + gb.format(customerOrder.getTotal()));
+                customerBasket.removeBooking(custBooking);
+                totalCostL1.setText("Total Cost: " + gb.format(customerBasket.getFilmTotal()));
+                totalCostL3.setText("Total: " + gb.format(customerBasket.getTotal()));
             });
 
             customerOrderVBox.getChildren().add(bookingHBox);
         }
-        customerOrderVBox.setSpacing(5);
+        customerOrderVBox.setSpacing(3);
         customerOrderVBox.setPadding(new Insets(10, 10, 10, 10));
 
         ScrollPane filmsScrollPane = new ScrollPane(customerOrderVBox);
-        filmsScrollPane.setPrefSize(430, 160);
+        filmsScrollPane.setPrefSize(440, 200);
 
-        totalCostL1 = new Label("Total Cost: " + gb.format(customerOrder.getFilmTotal()));
+        totalCostL1 = new Label("Total Cost: " + gb.format(customerBasket.getFilmTotal()));
         totalCostL1.setAlignment(Pos.CENTER_RIGHT);
         totalCostL1.setPrefWidth(520);
 
@@ -99,17 +99,22 @@ public class BasketDialog extends Stage {
 
         snackLabel = new Label("Snack");
         snackLabel.setAlignment(Pos.CENTER_LEFT); snackLabel.setPrefWidth(200);
+        sizeLabel = new Label("Size");
+        sizeLabel.setAlignment(Pos.CENTER_LEFT); sizeLabel.setPrefWidth(100);
         quantityLabel = new Label("Items");
-        quantityLabel.setAlignment(Pos.CENTER_RIGHT); quantityLabel.setPrefWidth(100);
+        quantityLabel.setAlignment(Pos.CENTER); quantityLabel.setPrefWidth(80);
         costLabel = new Label("Price");
-        costLabel.setAlignment(Pos.CENTER_RIGHT); costLabel.setPrefWidth(100);
-        HBox headingHBox2 = new HBox(snackLabel, quantityLabel, costLabel);
+        costLabel.setAlignment(Pos.CENTER); costLabel.setPrefWidth(80);
+        HBox headingHBox2 = new HBox(snackLabel, sizeLabel, quantityLabel, costLabel);
 
         snackScrollPane = new ScrollPane();
-        snackScrollPane.setPrefSize(430, 100);
-        snackScrollPane.setVisible(false);
+        snackScrollPane.setPrefSize(430, 200);
+        if (customerBasket.isSnacksEmpty())
+            snackScrollPane.setVisible(false);
+        else
+            snackScrollPane.setContent(showSnacks(customerBasket));
 
-        totalCostL2 = new Label("Total Cost: " + gb.format(customerOrder.getSnackTotal()));
+        totalCostL2 = new Label("Total Cost: " + gb.format(customerBasket.getSnackTotal()));
         totalCostL2.setAlignment(Pos.CENTER_RIGHT);
         totalCostL2.setPrefWidth(520);
 
@@ -117,7 +122,7 @@ public class BasketDialog extends Stage {
         bottomMiddleVBox.setPadding(new Insets(10, 10, 10, 10));
         bottomMiddleVBox.setSpacing(5);
 
-        totalCostL3 = new Label("Total: " + gb.format(customerOrder.getTotal()));
+        totalCostL3 = new Label("Total: " + gb.format(customerBasket.getTotal()));
         totalCostL3.setAlignment(Pos.CENTER);
         totalCostL3.setFont(new Font(18));
 
@@ -126,14 +131,14 @@ public class BasketDialog extends Stage {
         snackImageView.setFitWidth(50); snackImageView.setFitHeight(50);
         snacksButton.setGraphic(snackImageView);
         snacksButton.setOnAction(actionEvent -> {
-            SnacksDialog snacksDialog = new SnacksDialog(customerOrder);
+            SnacksDialog snacksDialog = new SnacksDialog(customerBasket);
             snacksDialog.initModality(Modality.APPLICATION_MODAL);
             snacksDialog.initOwner(BasketDialog.this);
             snacksDialog.showAndWait();
             snackScrollPane.setVisible(true);
-            snackScrollPane.setContent(showSnacks(customerOrder));
-            totalCostL2.setText("Total Cost: " + gb.format(customerOrder.getSnackTotal()));
-            totalCostL3.setText("Total: " + gb.format(customerOrder.getTotal()));
+            snackScrollPane.setContent(showSnacks(customerBasket));
+            totalCostL2.setText("Total Cost: " + gb.format(customerBasket.getSnackTotal()));
+            totalCostL3.setText("Total: " + gb.format(customerBasket.getTotal()));
         } );
 
         Button checkOutButton = new Button("Check Out");
@@ -150,23 +155,26 @@ public class BasketDialog extends Stage {
 
 
         VBox mainVBox = new VBox(topVBox, topMiddleVBox, bottomMiddleVBox, bottomVBox);
-        Scene scene = new Scene(mainVBox, 550, 550);
+        Scene scene = new Scene(mainVBox, 560, 600);
         this.setScene(scene);
     }
 
-    private VBox showSnacks(CustomerOrder customerOrder) {
+    private VBox showSnacks(CustomerBasket customerBasket) {
         NumberFormat gb = NumberFormat.getCurrencyInstance(Locale.UK);
         VBox snacksVBox = new VBox();
-        for (int i=0; i<customerOrder.getNumberOfSnacks(); i++) {
-            SnackPurchased snackPurchased = customerOrder.getSnackPurchased(i);
+        for (int i = 0; i< customerBasket.getNumberOfSnacks(); i++) {
+            SnackPurchased snackPurchased = customerBasket.getSnackPurchased(i);
             snackLabel = new Label(snackPurchased.getName());
             snackLabel.setAlignment(Pos.CENTER_LEFT); snackLabel.setPrefWidth(200);
 
+            sizeLabel = new Label("" + snackPurchased.getSize());
+            sizeLabel.setAlignment(Pos.CENTER_LEFT); sizeLabel.setPrefWidth(100);
+
             quantityLabel = new Label("" + snackPurchased.getQuantity());
-            quantityLabel.setAlignment(Pos.CENTER_RIGHT); quantityLabel.setPrefWidth(100);
+            quantityLabel.setAlignment(Pos.CENTER_RIGHT); quantityLabel.setPrefWidth(80);
 
             costLabel = new Label("" + gb.format(snackPurchased.getTotal()));
-            costLabel.setAlignment(Pos.CENTER_RIGHT); costLabel.setPrefWidth(100);
+            costLabel.setAlignment(Pos.CENTER_RIGHT); costLabel.setPrefWidth(80);
 
             ImageView redCross = new ImageView(new Image("file:cancelIcon.jpg"));
             redCross.setFitWidth(20); redCross.setFitHeight(20);
@@ -174,15 +182,17 @@ public class BasketDialog extends Stage {
             removeVBox.setOnMouseEntered(mouseEvent -> removeVBox.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, null, null))));
             removeVBox.setOnMouseExited(mouseEvent -> removeVBox.setBorder(new Border(new BorderStroke(null, null, null, null))));
 
-            HBox oneSnackHBox = new HBox(snackLabel, quantityLabel, costLabel, new Label("  "), removeVBox);
+            HBox oneSnackHBox = new HBox(snackLabel, sizeLabel, quantityLabel, costLabel, new Label("  "), removeVBox);
             removeVBox.setOnMouseClicked(mouseEvent -> {
                 snacksVBox.getChildren().remove(oneSnackHBox);
-                customerOrder.removeSnack(snackPurchased);
-                totalCostL2.setText("Total Cost: " + gb.format(customerOrder.getSnackTotal()));
-                totalCostL3.setText("Total: " + gb.format(customerOrder.getTotal()));
+                customerBasket.removeSnack(snackPurchased);
+                totalCostL2.setText("Total Cost: " + gb.format(customerBasket.getSnackTotal()));
+                totalCostL3.setText("Total: " + gb.format(customerBasket.getTotal()));
             });
             snacksVBox.getChildren().add(oneSnackHBox);
         }
+        snacksVBox.setSpacing(3);
+        snacksVBox.setPadding(new Insets(10, 10, 10, 10));
         return snacksVBox;
     }
 

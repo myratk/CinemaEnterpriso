@@ -1,6 +1,6 @@
 package GUI;
 
-import Domain.Customer.CustomerOrder;
+import Domain.Customer.CustomerBasket;
 import Domain.Snacks.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,15 +23,15 @@ public class SnacksDialog extends Stage {
     private ArrayList<SnackMenuCategory> allCategories = new ArrayList<>();
     //private ArrayList<Snack> selectedSnackMenu = new ArrayList<>();
 
-    private CustomerOrder customerOrder;
+    private CustomerBasket customerBasket;
 
     private ScrollPane rightScrollPane;
     private final Border outlineBorder = new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, null, null));
     private final Border noOutlineBorder = new Border(new BorderStroke(null, null, null, null));
     private VBox currentCategorySelected;
 
-    public SnacksDialog(CustomerOrder customerOrder) {
-        this.customerOrder = customerOrder;
+    public SnacksDialog(CustomerBasket customerBasket) {
+        this.customerBasket = customerBasket;
         this.setTitle("Snacks Menu");
 
         Label titleLabel = new Label("Movie Snacks Menu");
@@ -154,7 +154,7 @@ public class SnacksDialog extends Stage {
             snackVBox.setOnMouseEntered(mouseEvent -> snackVBox.setBorder(outlineBorder) );
             snackVBox.setOnMouseExited(mouseEvent -> snackVBox.setBorder(noOutlineBorder) );
             snackVBox.setOnMouseClicked(mouseEvent -> {
-                SnackDisplayGUI snackDisplayGUI = new SnackDisplayGUI(customerOrder, snack);
+                SnackDisplayGUI snackDisplayGUI = new SnackDisplayGUI(customerBasket, snack);
                 snackDisplayGUI.initModality(Modality.APPLICATION_MODAL);
                 snackDisplayGUI.showAndWait();
             } );

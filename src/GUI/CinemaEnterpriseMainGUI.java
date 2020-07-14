@@ -1,7 +1,7 @@
 package GUI;
 
 import Domain.*;
-import Domain.Customer.CustomerOrder;
+import Domain.Customer.CustomerBasket;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,7 +27,7 @@ public class CinemaEnterpriseMainGUI extends Application {
 
     private Show week1Show, week2Show, week3Show, week4Show;
 
-    CustomerOrder customerOrder;
+    CustomerBasket customerBasket;
 
     ComboBox<MovieDate> dateSelectionCombo;
 
@@ -41,7 +41,7 @@ public class CinemaEnterpriseMainGUI extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Cinema Enterprise");
         setShow();
-        customerOrder = new CustomerOrder();
+        customerBasket = new CustomerBasket();
 
         dateSelectionCombo = new ComboBox<>();
         dateSelectionCombo.getItems().addAll(sat1, sat2, sat3, sat4);
@@ -325,20 +325,20 @@ public class CinemaEnterpriseMainGUI extends Application {
     }
 
     private void filmSelected(Show show, LectureTheater lectureTheater, Film film) {
-        FilmDialog filmDialog = new FilmDialog(show, lectureTheater, film, customerOrder);
+        FilmDialog filmDialog = new FilmDialog(show, lectureTheater, film, customerBasket);
         filmDialog.initModality(Modality.APPLICATION_MODAL);
         filmDialog.initOwner(mainStage);
         filmDialog.showAndWait();
     }
 
     private void checkoutPressed() {
-        if(customerOrder.isBookingsEmpty()) {
+        if(customerBasket.isBookingsEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Your basket is empty", ButtonType.OK);
             alert.show();
         }
         else {
-            customerOrder.setDate(new MovieDate());
-            BasketDialog basketDialog = new BasketDialog(customerOrder);
+            customerBasket.setDate(new MovieDate());
+            BasketDialog basketDialog = new BasketDialog(customerBasket);
             basketDialog.initModality(Modality.APPLICATION_MODAL);
             basketDialog.initOwner(mainStage);
             basketDialog.showAndWait();

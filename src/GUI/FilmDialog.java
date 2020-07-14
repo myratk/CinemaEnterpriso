@@ -1,7 +1,7 @@
 package GUI;
 
 import Domain.*;
-import Domain.Customer.CustomerOrder;
+import Domain.Customer.CustomerBasket;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,14 +19,14 @@ public class FilmDialog extends Stage {
     private Show show;
     private LectureTheater lectureTheater;
     private Film film;
-    private CustomerOrder customerOrder;
+    private CustomerBasket customerBasket;
     TextField ticketsTF;
 
-    public FilmDialog(Show show, LectureTheater lectureTheater, Film film, CustomerOrder customerOrder) {
+    public FilmDialog(Show show, LectureTheater lectureTheater, Film film, CustomerBasket customerBasket) {
         this.show = show;
         this.lectureTheater = lectureTheater;
         this.film = film;
-        this.customerOrder = customerOrder;
+        this.customerBasket = customerBasket;
 
         ImageView imageView = new ImageView(film.getPoster());
         imageView.setFitWidth(200);
@@ -71,8 +71,8 @@ public class FilmDialog extends Stage {
         addButton.setOnAction(actionEvent -> addTicketsPressed() );
         Button minusButton = new Button("-");
         minusButton.setOnAction(actionEvent -> minusTicketPressed() );
-        if (customerOrder.containsBooking(film, show.getDate()))
-            ticketsTF = new TextField("" + customerOrder.getTicketsOfABooking(film, show.getDate()));
+        if (customerBasket.containsBooking(film, show.getDate()))
+            ticketsTF = new TextField("" + customerBasket.getTicketsOfABooking(film, show.getDate()));
         else
             ticketsTF = new TextField("1");
         ticketsTF.setEditable(false);
@@ -123,15 +123,15 @@ public class FilmDialog extends Stage {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION,
                             tickets + " tickets for " + film.getFilmName() + " have been added to basket", ButtonType.OK);
                     alert.showAndWait();
-                    if (customerOrder.containsBooking(film, show.getDate())) {
-                        int previousTickets = customerOrder.getTicketsOfABooking(film, show.getDate());
+                    if (customerBasket.containsBooking(film, show.getDate())) {
+                        int previousTickets = customerBasket.getTicketsOfABooking(film, show.getDate());
                         show.editBookedSeats(lectureTheater, previousTickets, tickets);
                         System.out.println(show.seatsAvailable(lectureTheater));
-                        customerOrder.editBooking(film, show.getDate(), tickets);
+                        customerBasket.editBooking(film, show.getDate(), tickets);
                     }
                     else {
                         show.bookSeats(lectureTheater, tickets);
-                        customerOrder.addBooking(film, lectureTheater, tickets, show.getDate());
+                        customerBasket.addBooking(film, lectureTheater, tickets, show.getDate());
                     }
                     this.close();
                 }

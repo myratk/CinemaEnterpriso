@@ -1,6 +1,6 @@
 package GUI;
 
-import Domain.Customer.CustomerOrder;
+import Domain.Customer.CustomerBasket;
 import Domain.Customer.SnackPurchased;
 import Domain.Snacks.Snack;
 import javafx.geometry.Insets;
@@ -19,10 +19,16 @@ import java.util.Locale;
 
 public class SnackDisplayGUI extends Stage {
     private Label priceLabel;
+    TextField quantTF;
     private Snack.Size chosenSize;
 
-    public SnackDisplayGUI(CustomerOrder customerOrder, Snack snack) {
+    private CustomerBasket customerBasket;
+    private Snack snack;
+
+    public SnackDisplayGUI(CustomerBasket customerBasket, Snack snack) {
         this.setTitle("Choose Snack");
+        this.customerBasket = customerBasket;
+        this.snack = snack;
 
         Label titleLabel = new Label(snack.getName());
         titleLabel.setFont(new Font(24));
@@ -59,7 +65,7 @@ public class SnackDisplayGUI extends Stage {
 
         priceLabel = new Label("price: ");
 
-        TextField quantTF = new TextField("1");
+        quantTF = new TextField("1");
         quantTF.setEditable(false);
         quantTF.setAlignment(Pos.CENTER);
         quantTF.setPrefWidth(35);
@@ -93,7 +99,10 @@ public class SnackDisplayGUI extends Stage {
                 alert.showAndWait();
             }
             else {
-                customerOrder.addSnack(new SnackPurchased(snack.getName(), snack.getPrice(chosenSize), Integer.parseInt(quantTF.getText())));
+                if (customerBasket.containsSnack(snack.getName(), chosenSize))
+                    customerBasket.editSnacksPurchased(snack.getName(), chosenSize, Integer.parseInt(quantTF.getText()));
+                else
+                    customerBasket.addSnack(snack.getName(), snack.getPrice(chosenSize), Integer.parseInt(quantTF.getText()), chosenSize);
                 this.close();
             }
         });
@@ -114,5 +123,8 @@ public class SnackDisplayGUI extends Stage {
     private void buttonPressed(double price) {
         NumberFormat gb = NumberFormat.getCurrencyInstance(Locale.UK);
         priceLabel.setText("price: " + gb.format(price));
+        if (customerBasket.containsSnack(snack.getName(), chosenSize)) {
+            quantTF.setText("" + customerBasket.getQuantityOfSnacks(snack.getName(), chosenSize));
+        }
     }
 }
