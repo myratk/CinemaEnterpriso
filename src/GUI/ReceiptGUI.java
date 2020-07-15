@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
@@ -33,42 +34,69 @@ public class ReceiptGUI extends Stage{
 
         ScrollPane middleScrollPane = new ScrollPane();
         Label nameLabel = new Label("Item");
+        nameLabel.setAlignment(Pos.CENTER_LEFT); nameLabel.setPrefWidth(200);
         Label qtyLabel = new Label("QTY");
+        qtyLabel.setAlignment(Pos.CENTER_LEFT); qtyLabel.setPrefWidth(50);
         Label costLabel = new Label("Price");
+        costLabel.setAlignment(Pos.CENTER_RIGHT); costLabel.setPrefWidth(50);
         HBox headingHBox = new HBox(nameLabel, qtyLabel, costLabel);
+        headingHBox.setPadding(new Insets(10, 10, 10, 10));
 
         VBox itemListVBox = new VBox();
         HBox itemHBox;
         for (int i=0; i<customerBasket.getNoOfBookings(); i++) {
             Booking booking = customerBasket.getBooking(i);
             nameLabel = new Label(booking.getFilm().getFilmName());
+            nameLabel.setAlignment(Pos.CENTER_LEFT); nameLabel.setPrefWidth(200);
             qtyLabel = new Label("" + booking.getNoOfTickets());
+            qtyLabel.setAlignment(Pos.CENTER_LEFT); qtyLabel.setPrefWidth(50);
             costLabel = new Label("" + gb.format(booking.getTotal()));
+            costLabel.setAlignment(Pos.CENTER_RIGHT); costLabel.setPrefWidth(50);
             itemHBox = new HBox(nameLabel, qtyLabel, costLabel);
+            itemHBox.setPadding(new Insets(10, 10, 10, 10));
             itemListVBox.getChildren().add(itemHBox);
         }
         for (int i=0; i<customerBasket.getNumberOfSnacks(); i++) {
             SnackPurchased snack = customerBasket.getSnackPurchased(i);
             nameLabel = new Label(snack.getName());
+            nameLabel.setAlignment(Pos.CENTER_LEFT); nameLabel.setPrefWidth(200);
             qtyLabel = new Label("" + snack.getQuantity());
-            costLabel = new Label("" + gb.format(snack.getPrice()));
+            qtyLabel.setAlignment(Pos.CENTER_LEFT); qtyLabel.setPrefWidth(50);
+            costLabel = new Label("" + gb.format(snack.getTotal()));
+            costLabel.setAlignment(Pos.CENTER_RIGHT); costLabel.setPrefWidth(50);
             itemHBox = new HBox(nameLabel, qtyLabel, costLabel);
+            itemHBox.setPadding(new Insets(10, 10, 10, 10));
             itemListVBox.getChildren().add(itemHBox);
         }
+        itemListVBox.setPadding(new Insets(5, 5, 5, 5));
+        itemListVBox.setSpacing(2);
+        middleScrollPane.setPrefSize(325, 250);
         middleScrollPane.setContent(itemListVBox);
 
-        VBox middleVBox = new VBox(headingHBox, middleScrollPane, new Label("TOTAL: " + gb.format(customerBasket.getTotal())));
+        Label totalLabel = new Label("TOTAL: " + gb.format(customerBasket.getTotal()));
+        totalLabel.setFont(new Font(16));
+        VBox middleVBox = new VBox(headingHBox, middleScrollPane, totalLabel);
+        middleVBox.setAlignment(Pos.CENTER);
+        middleVBox.setSpacing(5);
 
         Button doneButton = new Button("Done");
-        doneButton.setOnAction(actionEvent -> {
+        doneButton.setOnAction(actionEvent -> this.close() );
+        Button bookAgainButton = new Button("Book Again");
+        bookAgainButton.setOnAction(actionEvent -> {
             CinemaEnterpriseMainGUI gui = new CinemaEnterpriseMainGUI();
             gui.start(new Stage());
             this.close();
         });
-        VBox mainVBox = new VBox(uniLabel, detailHBox, middleVBox, doneButton);
+        HBox bottomButtonsHBox = new HBox(doneButton, bookAgainButton);
+        bottomButtonsHBox.setAlignment(Pos.CENTER);
+        bottomButtonsHBox.setSpacing(20);
+
+        Label changeLabel = new Label("Change given: " + gb.format(change));
+
+        VBox mainVBox = new VBox(uniLabel, detailHBox, middleVBox, changeLabel, new Label(""), bottomButtonsHBox);
         mainVBox.setAlignment(Pos.CENTER);
-        mainVBox.setPadding(new Insets(10, 10, 10, 10));
-        Scene scene = new Scene(mainVBox, 550, 600);
+        mainVBox.setSpacing(10);
+        Scene scene = new Scene(mainVBox, 350, 600);
         this.setScene(scene);
     }
 
