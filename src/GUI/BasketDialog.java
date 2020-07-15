@@ -6,9 +6,7 @@ import Domain.Customer.SnackPurchased;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -25,7 +23,9 @@ public class BasketDialog extends Stage {
     Label snackLabel, sizeLabel, quantityLabel, costLabel;
     Label totalCostL1, totalCostL2, totalCostL3;
 
-    public BasketDialog(CustomerBasket customerBasket) {
+    double totalCashGiven;
+
+    public BasketDialog(CustomerBasket customerBasket, Stage mainStage) {
         this.setTitle("Your Basket");
 
         Label titleLabel = new Label("Enterprising University");
@@ -153,9 +153,111 @@ public class BasketDialog extends Stage {
         bottomVBox.setAlignment(Pos.CENTER);
         bottomVBox.setSpacing(30);
 
+        //Label instructionL = new Label("Enter the number of notes");
+        TextField fiftyTF = new TextField("0");
+        fiftyTF.setPrefWidth(50); fiftyTF.setAlignment(Pos.CENTER_RIGHT);
+        TextField twentyTF = new TextField("0");
+        twentyTF.setPrefWidth(50); twentyTF.setAlignment(Pos.CENTER_RIGHT);
+        TextField tenTF = new TextField("0");
+        tenTF.setPrefWidth(50); fiftyTF.setAlignment(Pos.CENTER_RIGHT);
+        TextField fiveTF = new TextField("0");
+        fiveTF.setPrefWidth(50); fiveTF.setAlignment(Pos.CENTER_RIGHT);
+        TextField twoTF = new TextField("0");
+        twoTF.setPrefWidth(50); twoTF.setAlignment(Pos.CENTER_RIGHT);
+        TextField oneTF = new TextField("0");
+        oneTF.setPrefWidth(50); oneTF.setAlignment(Pos.CENTER_RIGHT);
+        TextField fiftyPTF = new TextField("0");
+        fiftyPTF.setPrefWidth(50); fiftyPTF.setAlignment(Pos.CENTER_RIGHT);
+        TextField twentyPTF = new TextField("0");
+        twentyPTF.setPrefWidth(50); twentyTF.setAlignment(Pos.CENTER_RIGHT);
+        Button doneButton = new Button("Done");
 
-        VBox mainVBox = new VBox(topVBox, topMiddleVBox, bottomMiddleVBox, bottomVBox);
-        Scene scene = new Scene(mainVBox, 560, 600);
+        HBox cashHB = new HBox(new Label("  £50"), fiftyTF, new Label("  £20"), twentyTF, new Label("  £10"), tenTF, new Label("  £5"), fiveTF);
+        cashHB.setAlignment(Pos.CENTER);
+        cashHB.setPadding(new Insets(10, 10, 10, 10));
+        cashHB.setSpacing(5);
+        HBox coinsHB = new HBox(new Label("  £2"), twoTF, new Label("  £1"), oneTF, new Label("  50p"), fiftyPTF, new Label("  20p"), twentyPTF, new Label("    "), doneButton);
+        coinsHB.setAlignment(Pos.CENTER);
+        coinsHB.setPadding(new Insets(10, 10, 10, 10));
+        coinsHB.setSpacing(5);
+
+        Button giveCashButton = new Button("Give Cash");
+        giveCashButton.setDisable(true);
+        Button cancelButton = new Button("Cancel Transaction");
+        HBox cashButtonsHBox = new HBox(giveCashButton, cancelButton);
+        cashButtonsHBox.setAlignment(Pos.CENTER);
+        cashButtonsHBox.setSpacing(20);
+        cashButtonsHBox.setPadding(new Insets(10, 10, 10, 10));
+
+        Label totalGiven = new Label("Total Received: " + gb.format(0));
+
+        VBox moneyVBox = new VBox(new Label("Please enter number of notes"), cashHB, coinsHB, totalGiven, cashButtonsHBox);
+        moneyVBox.setAlignment(Pos.CENTER);
+        moneyVBox.setSpacing(10);
+        moneyVBox.setVisible(false);
+
+        checkOutButton.setOnAction(actionEvent -> {
+            if (customerBasket.isBookingsEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "PLease add at least one film to basket", ButtonType.OK);
+                alert.showAndWait();
+                this.close();
+            } else {
+                moneyVBox.setVisible(true);
+                topMiddleVBox.setDisable(true);
+                bottomMiddleVBox.setDisable(true);
+                snacksButton.setDisable(true);
+                buttonsHBox.setDisable(true);
+                cashHB.setDisable(false);
+                coinsHB.setDisable(false);
+                giveCashButton.setDisable(true);
+            }
+        });
+        cancelButton.setOnAction(actionEvent -> {
+            moneyVBox.setVisible(false);
+            topMiddleVBox.setDisable(false);
+            bottomMiddleVBox.setDisable(false);
+            snacksButton.setDisable(false);
+            buttonsHBox.setDisable(false);
+            //totalGiven.setText("Cash Given: " + gb.format(0));
+        });
+        doneButton.setOnAction(actionEvent -> {
+            totalCashGiven = 0.0;
+            if (!(fiftyTF.getText() == null) && fiftyTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(fiftyTF.getText()) * 50;
+            if (!(twentyTF.getText() == null) && twentyTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(twentyTF.getText()) * 20;
+            if (!(tenTF.getText() == null) && tenTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(tenTF.getText()) * 10;
+            if (!(fiveTF.getText() == null) && fiveTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(fiveTF.getText()) * 5;
+            if (!(twoTF.getText() == null) && twoTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(twoTF.getText()) * 2;
+            if (!(oneTF.getText() == null) && oneTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(oneTF.getText());
+            if (!(fiftyPTF.getText() == null) && fiftyPTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(fiftyPTF.getText()) * 0.5;
+            if (!(twentyPTF.getText() == null) && twentyPTF.getText().matches("[0-9]+"))
+                totalCashGiven += Integer.parseInt(twentyPTF.getText()) * 0.2;
+
+            totalGiven.setText("Total Received: " + gb.format(totalCashGiven));
+            if (totalCashGiven >= customerBasket.getTotal()) {
+                giveCashButton.setDisable(false);
+                cashHB.setDisable(true); coinsHB.setDisable(true);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Not enough cash given", ButtonType.OK);
+                alert.showAndWait();
+            }
+        });
+        giveCashButton.setOnAction(actionEvent -> {
+            ReceiptGUI receiptGUI = new ReceiptGUI(customerBasket, totalCashGiven -customerBasket.getTotal());
+            receiptGUI.show();
+            this.close();
+            mainStage.close();
+        });
+
+
+        VBox mainVBox = new VBox(topVBox, topMiddleVBox, bottomMiddleVBox, bottomVBox, moneyVBox);
+        Scene scene = new Scene(mainVBox, 560, 750);
         this.setScene(scene);
     }
 

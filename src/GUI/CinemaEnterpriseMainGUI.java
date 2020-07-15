@@ -338,7 +338,7 @@ public class CinemaEnterpriseMainGUI extends Application {
         }
         else {
             customerBasket.setDate(new MovieDate());
-            BasketDialog basketDialog = new BasketDialog(customerBasket);
+            BasketDialog basketDialog = new BasketDialog(customerBasket, mainStage);
             basketDialog.initModality(Modality.APPLICATION_MODAL);
             basketDialog.initOwner(mainStage);
             basketDialog.showAndWait();
