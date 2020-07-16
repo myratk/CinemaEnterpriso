@@ -41,8 +41,15 @@ public class CustomerBasket {
         return getFilmTotal() + getSnackTotal();
     }
 
-    public void addBooking(Film film, LectureTheater lectureTheater, int tickets, MovieDate movieDate) {
-        bookings.add(new Booking(film, lectureTheater, tickets, movieDate));
+    private Booking findBooking(Film film, MovieDate date) {
+        for (Booking booking : bookings) {
+            if (booking.getFilm().equals(film) && booking.getDate().equals(date))
+                return booking;
+        }
+        return null;
+    }
+    public void addBooking(Film film, LectureTheater lectureTheater, int tickets, ArrayList<Integer> seatsTaken, MovieDate movieDate) {
+        bookings.add(new Booking(film, lectureTheater, tickets, seatsTaken, movieDate));
     }
     public void removeBooking(Booking booking) {
         bookings.remove(booking);
@@ -56,27 +63,27 @@ public class CustomerBasket {
     public boolean isBookingsEmpty() {
         return bookings.isEmpty();
     }
-
     public boolean containsBooking(Film film, MovieDate date) {
-        for (Booking booking : bookings) {
-            if (booking.getFilm().equals(film) && booking.getDate().equals(date))
-                return true;
-        }
+        if (!(findBooking(film, date) == null))
+            return true;
         return false;
     }
     public int getTicketsOfABooking(Film film, MovieDate date) {
-        for (Booking booking : bookings) {
-            if(booking.getFilm().equals(film) && booking.getDate().equals(date))
-                return booking.getNoOfTickets();
-        }
-        return 0;
+        Booking booking = findBooking(film, date);
+        if (booking == null)
+            return 0;
+        return booking.getNoOfTickets();
     }
-
-    public void editBooking(Film film, MovieDate date, int tickets) {
-        for (Booking booking : bookings) {
-            if(booking.getFilm().equals(film) && booking.getDate().equals(date))
-                booking.setTickets(tickets);
-        }
+    public void editBooking(Film film, MovieDate date, int newTickets, ArrayList<Integer> seatsTaken) {
+        Booking booking = findBooking(film, date);
+        booking.setTickets(newTickets);
+        booking.setSeatNumbers(seatsTaken);
+    }
+    public ArrayList<Integer> getSeatNumbers(Film film, MovieDate date) {
+        Booking booking = findBooking(film, date);
+        if (!(booking == null))
+            return booking.getSeatNumbers();
+        return null;
     }
 
     public int getNumberOfSnacks() {

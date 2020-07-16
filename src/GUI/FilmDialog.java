@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class FilmDialog extends Stage {
@@ -20,13 +21,17 @@ public class FilmDialog extends Stage {
     private LectureTheater lectureTheater;
     private Film film;
     private CustomerBasket customerBasket;
+    private ArrayList<Integer> seatsChosen;
     TextField ticketsTF;
+    Button bookButton;
 
     public FilmDialog(Show show, LectureTheater lectureTheater, Film film, CustomerBasket customerBasket) {
         this.show = show;
         this.lectureTheater = lectureTheater;
         this.film = film;
         this.customerBasket = customerBasket;
+        if (!(customerBasket.getSeatNumbers(this.film, this.show.getDate()) == null))
+            seatsChosen = (ArrayList<Integer>) (customerBasket.getSeatNumbers(this.film, this.show.getDate())).clone();
 
         ImageView imageView = new ImageView(film.getPoster());
         imageView.setFitWidth(200);
@@ -68,11 +73,17 @@ public class FilmDialog extends Stage {
         middleRightVBox.setPrefWidth(370);
 
         Button addButton = new Button("+");
-        addButton.setOnAction(actionEvent -> addTicketsPressed() );
+        addButton.setOnAction(actionEvent -> {
+            addTicketsPressed();
+            bookButton.setDisable(true);
+        } );
         Button minusButton = new Button("-");
-        minusButton.setOnAction(actionEvent -> minusTicketPressed() );
+        minusButton.setOnAction(actionEvent -> {
+            minusTicketPressed();
+            bookButton.setDisable(true);
+        } );
         if (customerBasket.containsBooking(film, show.getDate()))
-            ticketsTF = new TextField("" + customerBasket.getTicketsOfABooking(film, show.getDate()));
+            ticketsTF = new TextField("" + customerBasket.getTicketsOfABooking(this.film, this.show.getDate()));
         else
             ticketsTF = new TextField("1");
         ticketsTF.setEditable(false);
@@ -89,13 +100,30 @@ public class FilmDialog extends Stage {
         HBox topHBox = new HBox(leftVBox, rightVBox);
 
 
-        Button bookButton = new Button("Book Ticket");
+        bookButton = new Button("Book Ticket");
         bookButton.setPrefWidth(100);
         bookButton.setOnAction(actionEvent -> bookTicketPressed() );
+        bookButton.setDisable(true);
+        Button chooseButton = new Button("Choose Seats");
+        chooseButton.setPrefWidth(100);
+        chooseButton.setOnAction(actionEvent -> {
+            int tickets = Integer.parseInt(ticketsTF.getText());
+            if (this.show.seatsAvailable(this.lectureTheater) >= (tickets - this.customerBasket.getTicketsOfABooking(this.film, this.show.getDate()))) {
+                SeatsDialog seatsDialog = new SeatsDialog(seatsChosen, this.lectureTheater, tickets);
+                seatsDialog.showAndWait();
+                if (seatsDialog.getDoneChosen()) {
+                    seatsChosen = seatsDialog.getSeatsChosen();
+                    bookButton.setDisable(false);
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, not enough seats avaiable", ButtonType.OK);
+                alert.showAndWait();
+            }
+        });
         Button cancelButton = new Button("Cancel");
         cancelButton.setPrefWidth(100);
         cancelButton.setOnAction(actionEvent -> this.close() );
-        HBox bottomHBox = new HBox(cancelButton, bookButton);
+        HBox bottomHBox = new HBox(cancelButton, chooseButton, bookButton);
         bottomHBox.setAlignment(Pos.CENTER);
         bottomHBox.setPadding(new Insets(10));
         bottomHBox.setSpacing(10);
@@ -110,33 +138,26 @@ public class FilmDialog extends Stage {
 
     private void bookTicketPressed() {
         int tickets = Integer.parseInt(ticketsTF.getText());
-        if (tickets > show.seatsAvailable(lectureTheater)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Sorry, not enough seats available", ButtonType.OK);
-            alert.showAndWait();
-        }
-        else {
-            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Book " + ticketsTF.getText() + " tickets for " + film.getFilmName() + " on " + show.getDate() + "?",
-                    ButtonType.YES, ButtonType.NO);
-            confirmationAlert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                            tickets + " tickets for " + film.getFilmName() + " have been added to basket", ButtonType.OK);
-                    alert.showAndWait();
-                    if (customerBasket.containsBooking(film, show.getDate())) {
-                        int previousTickets = customerBasket.getTicketsOfABooking(film, show.getDate());
-                        show.editBookedSeats(lectureTheater, previousTickets, tickets);
-                        System.out.println(show.seatsAvailable(lectureTheater));
-                        customerBasket.editBooking(film, show.getDate(), tickets);
-                    }
-                    else {
-                        show.bookSeats(lectureTheater, tickets);
-                        customerBasket.addBooking(film, lectureTheater, tickets, show.getDate());
-                    }
-                    this.close();
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION,
+            "Book " + ticketsTF.getText() + " tickets for " + film.getFilmName() + " on " + show.getDate() + "?",
+                ButtonType.YES, ButtonType.NO);
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                        tickets + " tickets for " + film.getFilmName() + " have been added to basket", ButtonType.OK);
+                alert.showAndWait();
+                if (customerBasket.containsBooking(film, show.getDate())) {
+                    //System.out.println(customerBasket.getSeatNumbers(film, show.getDate()));
+                    show.editBookedSeats(lectureTheater, customerBasket.getSeatNumbers(film, show.getDate()), seatsChosen);//show: edit tickets
+                    customerBasket.editBooking(film, show.getDate(), tickets, seatsChosen);//customer baskte: edit tickets
                 }
-            });
-        }
+                else {
+                    show.bookSeats(lectureTheater, seatsChosen);
+                    customerBasket.addBooking(film, lectureTheater, tickets, seatsChosen, show.getDate());
+                }
+                this.close();
+            }
+        });
         ticketsTF.setText("1");
     }
 

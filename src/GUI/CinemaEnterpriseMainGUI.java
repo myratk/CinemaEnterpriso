@@ -230,7 +230,7 @@ public class CinemaEnterpriseMainGUI extends Application {
                 "from life as a toy.");
 
         //Initialize the lecture halls
-        LectureTheater lt1 = new LectureTheater("LT1", 200);
+        LectureTheater lt1 = new LectureTheater("LT1", 5);
         LectureTheater lt2 = new LectureTheater("LT2", 130);
         LectureTheater lt3 = new LectureTheater("LT3", 250);
         LectureTheater lt4 = new LectureTheater("LT4", 300);

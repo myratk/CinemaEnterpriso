@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Show {
     public static final double SHOWS_PER_WEEK = 10;
     private ArrayList<LectureTheater> lectureTheaters;
-    private ArrayList<Integer> seatsTakenInTheater;
+    private ArrayList<Seats> seatsInTheater;
     private MovieDate date;
 
     public Show(MovieDate date) {
         this.date = date;
         lectureTheaters = new ArrayList<>();
-        seatsTakenInTheater = new ArrayList<>();
+        seatsInTheater = new ArrayList<>();
     }
 
     public MovieDate getDate() {
@@ -22,26 +22,26 @@ public class Show {
         for (LectureTheater theater : theaters) {
             if (!(theater == null)) {
                 lectureTheaters.add(theater);
-                seatsTakenInTheater.add(0);
+                seatsInTheater.add(new Seats(theater.getTotalSeats()));
             }
         }
     }
 
     public int seatsAvailable(LectureTheater theater) {
         int index = lectureTheaters.indexOf(theater);
-        return theater.getTotalSeats() - seatsTakenInTheater.get(index);
+        return seatsInTheater.get(index).noOfSeatsEmpty();
     }
 
-    public void bookSeats(LectureTheater theater, int tickets) {
+    public void bookSeats(LectureTheater theater, ArrayList<Integer> seats) {
         int index = lectureTheaters.indexOf(theater);
-        int seatsTaken = seatsTakenInTheater.get(index) + tickets;
-        seatsTakenInTheater.set(index, seatsTaken);
+        seatsInTheater.get(index).bookSeats(seats);
     }
 
-    public void editBookedSeats(LectureTheater lectureTheater, int previousTickets, int newTickets) {
-        int index = lectureTheaters.indexOf(lectureTheater);
-        seatsTakenInTheater.set(index, seatsTakenInTheater.get(index) - previousTickets);
-        seatsTakenInTheater.set(index, seatsTakenInTheater.get(index) + newTickets);
+
+    public void editBookedSeats(LectureTheater lectureTheater, ArrayList<Integer> previousSeats, ArrayList<Integer> newSeats) {
+       Seats seats = seatsInTheater.get(lectureTheaters.indexOf(lectureTheater));
+       seats.removeSeatsTaken(previousSeats);
+       seats.bookSeats(newSeats);
     }
 
     public void addFilms(Film... films) {
