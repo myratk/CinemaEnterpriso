@@ -67,4 +67,10 @@ public class Show {
     public ArrayList<LectureTheater> getLectureTheaters() {
         return lectureTheaters;
     }
+
+    public boolean getSeatFull(LectureTheater lectureTheater, int seatNum) {
+        int index = lectureTheaters.indexOf(lectureTheater);
+        Seats seats = seatsInTheater.get(index);
+        return seats.getSeatStatus(seatNum);
+    }
 }

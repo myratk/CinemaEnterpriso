@@ -230,21 +230,21 @@ public class CinemaEnterpriseMainGUI extends Application {
                 "from life as a toy.");
 
         //Initialize the lecture halls
-        LectureTheater lt1 = new LectureTheater("LT1", 5);
+        LectureTheater lt1 = new LectureTheater("LT1", 40);
         LectureTheater lt2 = new LectureTheater("LT2", 130);
-        LectureTheater lt3 = new LectureTheater("LT3", 250);
-        LectureTheater lt4 = new LectureTheater("LT4", 300);
-        LectureTheater lt5 = new LectureTheater("LT5", 350);
-        LectureTheater lt6 = new LectureTheater("LT6", 220);
-        LectureTheater lt7 = new LectureTheater("LT7", 280);
+        LectureTheater lt3 = new LectureTheater("LT3", 200);
+        LectureTheater lt4 = new LectureTheater("LT4", 200);
+        LectureTheater lt5 = new LectureTheater("LT5", 150);
+        LectureTheater lt6 = new LectureTheater("LT6", 200);
+        LectureTheater lt7 = new LectureTheater("LT7", 180);
         LectureTheater lt8 = new LectureTheater("LT8", 190);
-        LectureTheater lt9 = new LectureTheater("LT9", 310);
-        LectureTheater lt10 = new LectureTheater("LT10", 275);
-        LectureTheater lt11 = new LectureTheater("LT11", 275);
-        LectureTheater lt12 = new LectureTheater("LT12", 275);
-        LectureTheater lt13 = new LectureTheater("LT13", 275);
-        LectureTheater lt14 = new LectureTheater("LT14", 275);
-        LectureTheater lt15 = new LectureTheater("LT15", 275);
+        LectureTheater lt9 = new LectureTheater("LT9", 200);
+        LectureTheater lt10 = new LectureTheater("LT10", 175);
+        LectureTheater lt11 = new LectureTheater("LT11", 175);
+        LectureTheater lt12 = new LectureTheater("LT12", 175);
+        LectureTheater lt13 = new LectureTheater("LT13", 200);
+        LectureTheater lt14 = new LectureTheater("LT14", 150);
+        LectureTheater lt15 = new LectureTheater("LT15", 100);
 
         //initialize the shows
         week1Show = new Show(sat1);

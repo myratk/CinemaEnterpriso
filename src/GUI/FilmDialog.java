@@ -109,10 +109,11 @@ public class FilmDialog extends Stage {
         chooseButton.setOnAction(actionEvent -> {
             int tickets = Integer.parseInt(ticketsTF.getText());
             if (this.show.seatsAvailable(this.lectureTheater) >= (tickets - this.customerBasket.getTicketsOfABooking(this.film, this.show.getDate()))) {
-                SeatsDialog seatsDialog = new SeatsDialog(seatsChosen, this.lectureTheater, tickets);
+                SeatsDialog seatsDialog = new SeatsDialog(seatsChosen, this.lectureTheater, tickets, show);
                 seatsDialog.showAndWait();
                 if (seatsDialog.getDoneChosen()) {
                     seatsChosen = seatsDialog.getSeatsChosen();
+                    System.out.println(seatsChosen);
                     bookButton.setDisable(false);
                 }
             } else {
